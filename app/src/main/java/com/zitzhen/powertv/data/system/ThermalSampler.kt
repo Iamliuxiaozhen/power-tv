@@ -23,14 +23,22 @@ class ThermalSampler(
         context.getSystemService(HardwarePropertiesManager::class.java)
     private val powerManager = context.getSystemService(PowerManager::class.java)
 
-    fun sample(): ThermalMetrics {
+    fun sample(batteryTemperatureCelsius: Float? = null): ThermalMetrics {
         val readings = mutableListOf<TemperatureReading>()
         val coveredKinds = mutableSetOf<TemperatureKind>()
 
         addHardwareReading(readings, coveredKinds, TemperatureKind.CPU, HardwarePropertiesManager.DEVICE_TEMPERATURE_CPU)
         addHardwareReading(readings, coveredKinds, TemperatureKind.GPU, HardwarePropertiesManager.DEVICE_TEMPERATURE_GPU)
         addHardwareReading(readings, coveredKinds, TemperatureKind.BATTERY, HardwarePropertiesManager.DEVICE_TEMPERATURE_BATTERY)
+        addHardwareReading(readings, coveredKinds, TemperatureKind.SKIN, HardwarePropertiesManager.DEVICE_TEMPERATURE_SKIN)
         addSysfsReadings(readings, coveredKinds)
+        if (readings.none { it.kind == TemperatureKind.BATTERY } && batteryTemperatureCelsius != null) {
+            readings += TemperatureReading(
+                label = "Battery",
+                celsius = batteryTemperatureCelsius,
+                kind = TemperatureKind.BATTERY,
+            )
+        }
 
         return ThermalMetrics(
             readings = readings.distinctBy { it.kind to it.label }.sortedByDescending { it.celsius },
@@ -46,7 +54,7 @@ class ThermalSampler(
     ) {
         val temperature = runCatching {
             hardwareProperties
-                ?.getDeviceTemperatures(deviceType, HardwarePropertiesManager.SOURCE_THERMAL)
+                ?.getDeviceTemperatures(deviceType, HardwarePropertiesManager.TEMPERATURE_CURRENT)
                 ?.filter { it.isFinite() && it > -30f && it < 150f }
                 ?.maxOrNull()
         }.getOrNull() ?: return
@@ -55,6 +63,7 @@ class ThermalSampler(
             TemperatureKind.CPU -> "CPU"
             TemperatureKind.GPU -> "GPU"
             TemperatureKind.BATTERY -> "Battery"
+            TemperatureKind.SKIN -> "Skin"
             else -> kind.name
         }
         readings += TemperatureReading(label = label, celsius = temperature, kind = kind)
