@@ -31,7 +31,11 @@
     <string name="dashboard_gpu_available">SYSFS</string>
 
     <string name="dashboard_thermal_title">Thermal</string>
-    <string name="dashboard_thermal_subtitle">%1$d sensors · peak %2$s</string>
+    <string name="dashboard_thermal_subtitle">%1$s · peak %2$s</string>
+    <plurals name="dashboard_thermal_sensor_count">
+        <item quantity="one">%1$d sensor</item>
+        <item quantity="other">%1$d sensors</item>
+    </plurals>
     <string name="dashboard_thermal_no_sensors">No readable temperature sensor on this device.</string>
     <string name="dashboard_thermal_sensors">SENSORS</string>
 

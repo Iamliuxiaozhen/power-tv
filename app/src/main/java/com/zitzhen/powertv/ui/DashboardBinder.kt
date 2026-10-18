@@ -214,7 +214,11 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
         } else {
             context.getString(
                 R.string.dashboard_thermal_subtitle,
-                thermal.readings.size,
+                context.resources.getQuantityString(
+                    R.plurals.dashboard_thermal_sensor_count,
+                    thermal.readings.size,
+                    thermal.readings.size,
+                ),
                 Formatters.temperature(peak),
             )
         }
