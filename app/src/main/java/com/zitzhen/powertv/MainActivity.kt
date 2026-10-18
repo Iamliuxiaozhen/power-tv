@@ -37,13 +37,9 @@ class MainActivity : AppCompatActivity() {
         dashboardBinder.bind(MonitorUiState())
         showDashboard(true)
 
-        binding.toolbar.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.action_about) {
-                showAboutDialog()
-                true
-            } else {
-                false
-            }
+        binding.toolbar.menu.findItem(R.id.action_about)?.setOnMenuItemClickListener {
+            showAboutDialog()
+            true
         }
 
         binding.bottomNav.setOnItemSelectedListener { item ->
