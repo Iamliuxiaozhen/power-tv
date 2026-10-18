@@ -64,7 +64,7 @@
     <string name="dashboard_device_abi">ABI</string>
     <string name="dashboard_device_uptime">运行时间</string>
     <string name="dashboard_device_cores">核心</string>
-    <string name="dashboard_device_cores_value">%1$d 在线 / 共 %2$d</string>
+    <string name="dashboard_device_cores_value">%1$d / %2$d 在线</string>
 
     <string name="thermal_status_none">正常</string>
     <string name="thermal_status_light">轻微</string>
