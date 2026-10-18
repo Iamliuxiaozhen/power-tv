@@ -43,4 +43,5 @@
     <color name="chart_grid">#1A006A67</color>
     <color name="chart_fill">#55006A67</color>
     <color name="live_dot">#1F7A66</color>
+    <color name="ic_launcher_background">#003735</color>
 </resources>
