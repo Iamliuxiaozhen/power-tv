@@ -1,0 +1,97 @@
+<resources>
+    <string name="app_name">power-tv</string>
+    <string name="app_tagline">即時系統監控</string>
+
+    <string name="nav_dashboard">總覽</string>
+    <string name="nav_processes">程序</string>
+    <string name="action_about">關於</string>
+
+    <string name="status_live">即時</string>
+    <string name="status_paused">已暫停</string>
+    <string name="dot_separator"> · </string>
+
+    <string name="dashboard_hero_label">正在監控的裝置</string>
+    <string name="device_display_name">%1$s %2$s</string>
+    <string name="dashboard_hero_meta">Android %1$s · %2$s · 已運作 %3$s</string>
+    <string name="dashboard_hero_timestamp">更新於 %1$s</string>
+    <string name="dashboard_hero_refresh">每秒重新整理</string>
+
+    <string name="dashboard_cpu_title">CPU</string>
+    <string name="dashboard_cpu_model_unknown">處理器</string>
+    <string name="dashboard_cpu_freq_max">最高 %1$s</string>
+    <string name="dashboard_cpu_cores">每核心負載</string>
+    <string name="dashboard_cpu_note">此 Android 版本禁止一般應用程式讀取 /proc/stat，未取得 Root 時無法顯示系統 CPU 使用率。若核心開放頻率與核心狀態，仍會在此顯示。</string>
+    <string name="dashboard_core_name">C%1$d</string>
+    <string name="dashboard_core_offline">離線</string>
+
+    <string name="dashboard_gpu_title">GPU</string>
+    <string name="dashboard_gpu_name">%1$s GPU</string>
+    <string name="dashboard_gpu_max_freq">最高 %1$s</string>
+    <string name="dashboard_gpu_note">Android 沒有公開的 GPU API；僅當核心開放廠商 sysfs 節點時才能讀取。</string>
+    <string name="dashboard_gpu_available">SYSFS</string>
+
+    <string name="dashboard_thermal_title">溫度</string>
+    <string name="dashboard_thermal_subtitle">%1$s · 峰值 %2$s</string>
+    <plurals name="dashboard_thermal_sensor_count">
+        <item quantity="other">%1$d 個感應器</item>
+    </plurals>
+    <string name="dashboard_thermal_no_sensors">此裝置沒有可讀取的溫度感應器。</string>
+    <string name="dashboard_thermal_sensors">感應器</string>
+    <string name="dashboard_temperature_skin">機身</string>
+    <string name="dashboard_temperature_board">主機板</string>
+
+    <string name="dashboard_memory_title">記憶體</string>
+    <string name="dashboard_memory_summary">%1$s / %2$s</string>
+    <string name="dashboard_memory_cached">快取</string>
+    <string name="dashboard_memory_available">可用</string>
+    <string name="dashboard_memory_swap">置換</string>
+    <string name="dashboard_memory_swap_value">%1$s / %2$s</string>
+
+    <string name="dashboard_battery_title">電池</string>
+    <string name="dashboard_battery_charging">充電中</string>
+    <string name="dashboard_battery_discharging">放電中</string>
+    <string name="dashboard_battery_full">已充飽</string>
+    <string name="dashboard_battery_not_charging">未充電</string>
+    <string name="dashboard_battery_unknown">未知</string>
+    <string name="dashboard_battery_temperature">溫度</string>
+    <string name="dashboard_battery_voltage">電壓</string>
+    <string name="dashboard_battery_current">電流</string>
+
+    <string name="dashboard_device_title">裝置</string>
+    <string name="dashboard_device_model">型號</string>
+    <string name="dashboard_device_android">Android</string>
+    <string name="dashboard_device_hardware">硬體</string>
+    <string name="dashboard_device_abi">ABI</string>
+    <string name="dashboard_device_uptime">運作時間</string>
+    <string name="dashboard_device_cores">核心</string>
+    <string name="dashboard_device_cores_value">%1$d / %2$d 已啟用</string>
+
+    <string name="thermal_status_none">正常</string>
+    <string name="thermal_status_light">輕微</string>
+    <string name="thermal_status_moderate">中等</string>
+    <string name="thermal_status_severe">嚴重</string>
+    <string name="thermal_status_critical">危急</string>
+    <string name="thermal_status_emergency">緊急</string>
+    <string name="thermal_status_shutdown">關機</string>
+    <string name="thermal_status_unknown">未知</string>
+
+    <string name="processes_visibility_title">Android 程序可見性限制</string>
+    <string name="processes_visibility_body">現代 Android 會向一般應用程式隱藏其他應用程式的 /proc 條目。power-tv 會顯示系統允許存取的全部程序——無需 Root，無需特殊權限。</string>
+    <plurals name="processes_count">
+        <item quantity="other">可見 %1$d 個</item>
+    </plurals>
+    <string name="processes_updated">更新於 %1$s</string>
+    <string name="processes_sort_memory">記憶體</string>
+    <string name="processes_sort_cpu">CPU</string>
+    <string name="processes_empty_title">無法讀取程序</string>
+    <string name="processes_empty_body">系統拒絕存取所有 /proc 條目。</string>
+    <string name="process_own_badge">本應用程式</string>
+    <string name="process_meta">PID %1$d · UID %2$s · %3$s</string>
+    <string name="process_uid_unknown">—</string>
+    <string name="process_cpu">%1$s CPU</string>
+
+    <string name="about_title">關於 power-tv</string>
+    <string name="about_version">版本 %1$s</string>
+    <string name="about_body">一款受 btop 啟發的本地優先 Android 系統監控器。\n\nCPU 與記憶體資料來自 /proc；溫度來自公開的熱管理 API 與可讀取的 sysfs 感應器；GPU 計數由廠商實作，可能無法取得。Android 會限制一般應用程式的程序可見性。\n\n所有遙測資料都留在本機——power-tv 不會存取網路。</string>
+    <string name="about_ok">確定</string>
+</resources>
