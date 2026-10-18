@@ -18,3 +18,5 @@ local.properties
 /.gradle-home/
 # IDE metadata
 /.idea/
+/.test-avd/
+/.android-home/
