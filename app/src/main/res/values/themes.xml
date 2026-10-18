@@ -39,9 +39,7 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:forceDarkAllowed">false</item>
     </style>
 
     <style name="Theme.Powertv" parent="Base.Theme.Powertv" />
@@ -97,10 +95,5 @@
     <style name="Widget.Powertv.Pill.Primary" parent="Widget.Powertv.Pill">
         <item name="android:background">@drawable/bg_pill_primary</item>
         <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
-    </style>
-
-    <style name="Widget.Powertv.Pill.Warning" parent="Widget.Powertv.Pill">
-        <item name="android:background">@drawable/bg_pill_warning</item>
-        <item name="android:textColor">?attr/colorOnErrorContainer</item>
     </style>
 </resources>
