@@ -60,7 +60,7 @@
                     android:paddingEnd="7dp"
                     android:paddingBottom="1dp"
                     android:text="@string/process_own_badge"
-                    android:textSize="8sp"
+                    android:textSize="11sp"
                     android:visibility="gone"
                     tools:visibility="visible" />
             </LinearLayout>
