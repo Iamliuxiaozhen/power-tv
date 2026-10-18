@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">power-tv</string>
+    <string name="app_tagline">LIVE SYSTEM MONITOR</string>
+
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_processes">Processes</string>
+    <string name="action_about">About</string>
 </resources>
