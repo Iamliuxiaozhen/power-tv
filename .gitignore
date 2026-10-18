@@ -20,3 +20,6 @@ local.properties
 /.idea/
 /.test-avd/
 /.android-home/
+
+# Kotlin compiler session data
+/.kotlin/
