@@ -26,14 +26,12 @@
     <string name="dashboard_gpu_title">GPU</string>
     <string name="dashboard_gpu_name">%1$s GPU</string>
     <string name="dashboard_gpu_max_freq">最高 %1$s</string>
-    <string name="dashboard_gpu_unavailable">厂商未开放计数</string>
     <string name="dashboard_gpu_note">Android 没有公开的 GPU API；仅当内核开放厂商 sysfs 节点时才能读取。</string>
     <string name="dashboard_gpu_available">SYSFS</string>
 
     <string name="dashboard_thermal_title">温度</string>
     <string name="dashboard_thermal_subtitle">%1$s · 峰值 %2$s</string>
     <plurals name="dashboard_thermal_sensor_count">
-        <item quantity="one">%1$d 个传感器</item>
         <item quantity="other">%1$d 个传感器</item>
     </plurals>
     <string name="dashboard_thermal_no_sensors">此设备没有可读取的温度传感器。</string>
@@ -57,7 +55,6 @@
     <string name="dashboard_battery_temperature">温度</string>
     <string name="dashboard_battery_voltage">电压</string>
     <string name="dashboard_battery_current">电流</string>
-    <string name="dashboard_battery_technology">%1$s 电池</string>
 
     <string name="dashboard_device_title">设备</string>
     <string name="dashboard_device_model">型号</string>

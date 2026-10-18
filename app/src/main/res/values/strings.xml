@@ -26,7 +26,6 @@
     <string name="dashboard_gpu_title">GPU</string>
     <string name="dashboard_gpu_name">%1$s GPU</string>
     <string name="dashboard_gpu_max_freq">Max %1$s</string>
-    <string name="dashboard_gpu_unavailable">Vendor counters unavailable</string>
     <string name="dashboard_gpu_note">Android has no public GPU API. Values come from readable vendor sysfs nodes when the kernel exposes them.</string>
     <string name="dashboard_gpu_available">SYSFS</string>
 
@@ -57,7 +56,6 @@
     <string name="dashboard_battery_temperature">TEMP</string>
     <string name="dashboard_battery_voltage">VOLTAGE</string>
     <string name="dashboard_battery_current">CURRENT</string>
-    <string name="dashboard_battery_technology">%1$s battery</string>
 
     <string name="dashboard_device_title">Device</string>
     <string name="dashboard_device_model">Model</string>
