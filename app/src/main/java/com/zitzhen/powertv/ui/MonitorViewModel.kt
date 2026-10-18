@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.zitzhen.powertv.data.model.SystemSnapshot
 import com.zitzhen.powertv.data.system.SystemMonitor
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -26,7 +27,6 @@ data class MonitorUiState(
     val thermalHistory: List<Float> = emptyList(),
     val memoryHistory: List<Float> = emptyList(),
     val isLive: Boolean = false,
-    val errorMessage: String? = null,
 )
 
 class MonitorViewModel(application: Application) : AndroidViewModel(application) {
@@ -44,16 +44,19 @@ class MonitorViewModel(application: Application) : AndroidViewModel(application)
             while (isActive) {
                 val startedAt = SystemClock.elapsedRealtime()
                 val includeProcesses = tick % PROCESS_INTERVAL_TICKS == 0
-                val snapshot = runCatching {
+                val snapshot = try {
                     withContext(Dispatchers.IO) { monitor.sample(includeProcesses) }
-                }.onFailure { Log.w(TAG, "Sampling failed", it) }.getOrNull()
+                } catch (cancelled: CancellationException) {
+                    throw cancelled
+                } catch (error: Exception) {
+                    Log.w(TAG, "Sampling failed", error)
+                    null
+                }
 
                 if (snapshot != null) {
                     publish(snapshot)
                 } else {
-                    _uiState.update {
-                        it.copy(isLive = false, errorMessage = "Unable to read system telemetry")
-                    }
+                    _uiState.update { it.copy(isLive = false) }
                 }
 
                 tick++
@@ -78,7 +81,6 @@ class MonitorViewModel(application: Application) : AndroidViewModel(application)
                 thermalHistory = append(state.thermalHistory, snapshot.thermal.maxCelsius),
                 memoryHistory = append(state.memoryHistory, snapshot.memory.usedPercent),
                 isLive = true,
-                errorMessage = null,
             )
         }
     }
