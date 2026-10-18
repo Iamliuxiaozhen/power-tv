@@ -1,3 +1,99 @@
 <resources>
     <string name="app_name">power-tv</string>
+    <string name="app_tagline">LIVE SYSTEM MONITOR</string>
+
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_processes">Processes</string>
+    <string name="action_about">About</string>
+
+    <string name="status_live">LIVE</string>
+    <string name="status_paused">PAUSED</string>
+    <string name="dot_separator"> · </string>
+
+    <string name="dashboard_hero_label">MONITORED DEVICE</string>
+    <string name="device_display_name">%1$s %2$s</string>
+    <string name="dashboard_hero_meta">Android %1$s · %2$s · up %3$s</string>
+    <string name="dashboard_hero_timestamp">Updated %1$s</string>
+    <string name="dashboard_hero_refresh">1 s refresh</string>
+
+    <string name="dashboard_cpu_title">CPU</string>
+    <string name="dashboard_cpu_model_unknown">Processor</string>
+    <string name="dashboard_cpu_freq_max">Max %1$s</string>
+    <string name="dashboard_cpu_cores">PER-CORE LOAD</string>
+    <string name="dashboard_cpu_note">This Android build blocks /proc/stat for normal apps, so system CPU load is unavailable without root. Frequencies and core state are still shown when the kernel exposes them.</string>
+    <string name="dashboard_core_name">C%1$d</string>
+    <string name="dashboard_core_offline">offline</string>
+
+    <string name="dashboard_gpu_title">GPU</string>
+    <string name="dashboard_gpu_name">%1$s GPU</string>
+    <string name="dashboard_gpu_max_freq">Max %1$s</string>
+    <string name="dashboard_gpu_note">Android has no public GPU API. Values come from readable vendor sysfs nodes when the kernel exposes them.</string>
+    <string name="dashboard_gpu_available">SYSFS</string>
+
+    <string name="dashboard_thermal_title">Thermal</string>
+    <string name="dashboard_thermal_subtitle">%1$s · peak %2$s</string>
+    <plurals name="dashboard_thermal_sensor_count">
+        <item quantity="one">%1$d sensor</item>
+        <item quantity="other">%1$d sensors</item>
+    </plurals>
+    <string name="dashboard_thermal_no_sensors">No readable temperature sensor on this device.</string>
+    <string name="dashboard_thermal_sensors">SENSORS</string>
+    <string name="dashboard_temperature_skin">Skin</string>
+    <string name="dashboard_temperature_board">Board</string>
+
+    <string name="dashboard_memory_title">Memory</string>
+    <string name="dashboard_memory_summary">%1$s / %2$s</string>
+    <string name="dashboard_memory_cached">Cached</string>
+    <string name="dashboard_memory_available">Available</string>
+    <string name="dashboard_memory_swap">Swap</string>
+    <string name="dashboard_memory_swap_value">%1$s / %2$s</string>
+
+    <string name="dashboard_battery_title">Battery</string>
+    <string name="dashboard_battery_charging">Charging</string>
+    <string name="dashboard_battery_discharging">Discharging</string>
+    <string name="dashboard_battery_full">Full</string>
+    <string name="dashboard_battery_not_charging">Not charging</string>
+    <string name="dashboard_battery_unknown">Unknown</string>
+    <string name="dashboard_battery_temperature">TEMP</string>
+    <string name="dashboard_battery_voltage">VOLTAGE</string>
+    <string name="dashboard_battery_current">CURRENT</string>
+
+    <string name="dashboard_device_title">Device</string>
+    <string name="dashboard_device_model">Model</string>
+    <string name="dashboard_device_android">Android</string>
+    <string name="dashboard_device_hardware">Hardware</string>
+    <string name="dashboard_device_abi">ABI</string>
+    <string name="dashboard_device_uptime">Uptime</string>
+    <string name="dashboard_device_cores">Cores</string>
+    <string name="dashboard_device_cores_value">%1$d / %2$d online</string>
+
+    <string name="thermal_status_none">Nominal</string>
+    <string name="thermal_status_light">Light</string>
+    <string name="thermal_status_moderate">Moderate</string>
+    <string name="thermal_status_severe">Severe</string>
+    <string name="thermal_status_critical">Critical</string>
+    <string name="thermal_status_emergency">Emergency</string>
+    <string name="thermal_status_shutdown">Shutdown</string>
+    <string name="thermal_status_unknown">Unknown</string>
+
+    <string name="processes_visibility_title">Android visibility limit</string>
+    <string name="processes_visibility_body">Modern Android hides other apps\' /proc entries from normal apps. power-tv shows every process the system allows — no root, no special permissions.</string>
+    <plurals name="processes_count">
+        <item quantity="one">%1$d process visible</item>
+        <item quantity="other">%1$d processes visible</item>
+    </plurals>
+    <string name="processes_updated">Updated %1$s</string>
+    <string name="processes_sort_memory">Memory</string>
+    <string name="processes_sort_cpu">CPU</string>
+    <string name="processes_empty_title">No processes readable</string>
+    <string name="processes_empty_body">The system denied access to every /proc entry.</string>
+    <string name="process_own_badge">THIS APP</string>
+    <string name="process_meta">PID %1$d · UID %2$s · %3$s</string>
+    <string name="process_uid_unknown">—</string>
+    <string name="process_cpu">%1$s CPU</string>
+
+    <string name="about_title">About power-tv</string>
+    <string name="about_version">Version %1$s</string>
+    <string name="about_body">A local-first Android system monitor inspired by btop.\n\nCPU and memory come from /proc. Temperatures use public thermal APIs plus readable sysfs sensors. GPU counters are vendor-specific and may be unavailable. Android restricts process visibility for normal apps.\n\nAll telemetry stays on this device — power-tv has no network access.</string>
+    <string name="about_ok">OK</string>
 </resources>

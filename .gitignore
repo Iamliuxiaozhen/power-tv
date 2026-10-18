@@ -13,3 +13,16 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Local Gradle home used for sandboxed/offline builds
+/.gradle-home/
+# IDE metadata
+/.idea/
+/.test-avd/
+/.android-home/
+
+# Kotlin compiler session data
+/.kotlin/
+
+app/debug
+.idea/
