@@ -38,6 +38,8 @@
     </plurals>
     <string name="dashboard_thermal_no_sensors">此设备没有可读取的温度传感器。</string>
     <string name="dashboard_thermal_sensors">传感器</string>
+    <string name="dashboard_temperature_skin">机身</string>
+    <string name="dashboard_temperature_board">主板</string>
 
     <string name="dashboard_memory_title">内存</string>
     <string name="dashboard_memory_summary">%1$s / %2$s</string>

@@ -10,6 +10,8 @@ import com.google.android.material.color.MaterialColors
 import com.zitzhen.powertv.R
 import com.zitzhen.powertv.data.model.BatteryState
 import com.zitzhen.powertv.data.model.SystemSnapshot
+import com.zitzhen.powertv.data.model.TemperatureKind
+import com.zitzhen.powertv.data.model.TemperatureReading
 import com.zitzhen.powertv.data.model.ThermalStatus
 import com.zitzhen.powertv.databinding.ItemCoreBinding
 import com.zitzhen.powertv.databinding.ItemInfoRowBinding
@@ -233,7 +235,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
         binding.thermalSensors.removeAllViews()
         thermal.readings.take(5).forEach { reading ->
             val row = ItemInfoRowBinding.inflate(inflater, binding.thermalSensors, false)
-            row.infoLabel.text = reading.label
+            row.infoLabel.text = temperatureLabel(reading)
             row.infoValue.text = Formatters.temperature(reading.celsius)
             binding.thermalSensors.addView(row.root)
         }
@@ -329,6 +331,13 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
         }
         view.setBackgroundResource(background)
         view.setTextColor(MaterialColors.getColor(view, textColorAttr))
+    }
+
+    private fun temperatureLabel(reading: TemperatureReading): String = when {
+        reading.kind == TemperatureKind.BATTERY -> context.getString(R.string.dashboard_battery_title)
+        reading.kind == TemperatureKind.SKIN -> context.getString(R.string.dashboard_temperature_skin)
+        reading.kind == TemperatureKind.BOARD -> context.getString(R.string.dashboard_temperature_board)
+        else -> reading.label
     }
 
     private fun batteryStateLabel(state: BatteryState): Int = when (state) {

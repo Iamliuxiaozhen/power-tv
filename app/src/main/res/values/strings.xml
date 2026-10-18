@@ -38,6 +38,8 @@
     </plurals>
     <string name="dashboard_thermal_no_sensors">No readable temperature sensor on this device.</string>
     <string name="dashboard_thermal_sensors">SENSORS</string>
+    <string name="dashboard_temperature_skin">Skin</string>
+    <string name="dashboard_temperature_board">Board</string>
 
     <string name="dashboard_memory_title">Memory</string>
     <string name="dashboard_memory_summary">%1$s / %2$s</string>
