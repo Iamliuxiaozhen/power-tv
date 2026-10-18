@@ -1,6 +1,7 @@
 package com.zitzhen.powertv.data.proc
 
 import android.content.Context
+import android.os.SystemClock
 import android.system.Os
 import android.system.OsConstants
 import com.zitzhen.powertv.data.model.ProcessInfo
@@ -32,13 +33,23 @@ class ProcessSampler(
     }.getOrDefault(4096L)
     private val coreCount = Runtime.getRuntime().availableProcessors()
 
+    private val clockTicksPerSecond = runCatching {
+        Os.sysconf(OsConstants._SC_CLK_TCK)
+    }.getOrDefault(100L).coerceAtLeast(1L)
+
     private var previousTicks: Map<Int, Ticks> = emptyMap()
     private var previousTotalTicks: Long? = null
+    private var previousSampleElapsedMillis: Long? = null
 
     fun sample(): ProcessSnapshot {
         val currentTotalTicks = readTotalCpuTicks()
         val totalDelta = previousTotalTicks?.let { previous ->
             currentTotalTicks?.minus(previous)?.takeIf { it > 0L }
+        }
+
+        val sampleElapsedMillis = SystemClock.elapsedRealtime()
+        val elapsedSeconds = previousSampleElapsedMillis?.let { previous ->
+            (sampleElapsedMillis - previous).takeIf { it > 0L }?.div(1_000.0)
         }
 
         val rawProcesses = procRoot.listFiles()
@@ -51,21 +62,24 @@ class ProcessSampler(
         val processes = rawProcesses
             .map { raw ->
                 val previous = previousTicks[raw.info.pid]
-                val cpu = if (
-                    previous != null &&
-                    previous.startTimeTicks == raw.startTimeTicks &&
-                    totalDelta != null
+                val processDelta = if (
+                    previous != null && previous.startTimeTicks == raw.startTimeTicks
                 ) {
-                    val processDelta = raw.cpuTicks - previous.cpuTicks
-                    if (processDelta >= 0L) {
+                    raw.cpuTicks - previous.cpuTicks
+                } else {
+                    null
+                }
+                val cpu = when {
+                    processDelta == null || processDelta < 0L -> null
+                    totalDelta != null ->
                         (processDelta.toDouble() / totalDelta * coreCount * 100.0)
                             .toFloat()
                             .coerceIn(0f, coreCount * 100f)
-                    } else {
-                        null
-                    }
-                } else {
-                    null
+                    elapsedSeconds != null ->
+                        (processDelta / (elapsedSeconds * clockTicksPerSecond) * 100.0)
+                            .toFloat()
+                            .coerceIn(0f, coreCount * 100f)
+                    else -> null
                 }
                 raw.info.copy(cpuPercent = cpu)
             }
@@ -77,6 +91,7 @@ class ProcessSampler(
             raw.info.pid to Ticks(raw.cpuTicks, raw.startTimeTicks)
         }
         previousTotalTicks = currentTotalTicks
+        previousSampleElapsedMillis = sampleElapsedMillis
 
         return ProcessSnapshot(
             processes = processes,
