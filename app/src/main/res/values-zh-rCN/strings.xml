@@ -11,6 +11,7 @@
     <string name="dot_separator"> · </string>
 
     <string name="dashboard_hero_label">正在监控的设备</string>
+    <string name="device_display_name">%1$s %2$s</string>
     <string name="dashboard_hero_meta">Android %1$s · %2$s · 已运行 %3$s</string>
     <string name="dashboard_hero_timestamp">更新于 %1$s</string>
     <string name="dashboard_hero_refresh">每秒刷新</string>
@@ -76,7 +77,9 @@
 
     <string name="processes_visibility_title">Android 进程可见性限制</string>
     <string name="processes_visibility_body">现代 Android 会向普通应用隐藏其他应用的 /proc 条目。power-tv 会显示系统允许访问的全部进程——无需 Root，无需特殊权限。</string>
-    <string name="processes_count">可见 %1$d 个</string>
+    <plurals name="processes_count">
+        <item quantity="other">可见 %1$d 个</item>
+    </plurals>
     <string name="processes_updated">更新于 %1$s</string>
     <string name="processes_sort_memory">内存</string>
     <string name="processes_sort_cpu">CPU</string>

@@ -37,8 +37,9 @@ class ProcessBinder(private val binding: ScreenProcessesBinding) {
         if (snapshot === processes) return
         snapshot = processes
 
-        binding.processesCount.text = binding.root.context.getString(
-            R.string.processes_count,
+        binding.processesCount.text = binding.root.context.resources.getQuantityString(
+            R.plurals.processes_count,
+            processes.count,
             processes.count,
         )
         binding.processesUpdated.apply {

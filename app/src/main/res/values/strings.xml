@@ -11,6 +11,7 @@
     <string name="dot_separator"> · </string>
 
     <string name="dashboard_hero_label">MONITORED DEVICE</string>
+    <string name="device_display_name">%1$s %2$s</string>
     <string name="dashboard_hero_meta">Android %1$s · %2$s · up %3$s</string>
     <string name="dashboard_hero_timestamp">Updated %1$s</string>
     <string name="dashboard_hero_refresh">1 s refresh</string>
@@ -77,7 +78,10 @@
 
     <string name="processes_visibility_title">Android visibility limit</string>
     <string name="processes_visibility_body">Modern Android hides other apps\' /proc entries from normal apps. power-tv shows every process the system allows — no root, no special permissions.</string>
-    <string name="processes_count">%1$d visible</string>
+    <plurals name="processes_count">
+        <item quantity="one">%1$d process visible</item>
+        <item quantity="other">%1$d processes visible</item>
+    </plurals>
     <string name="processes_updated">Updated %1$s</string>
     <string name="processes_sort_memory">Memory</string>
     <string name="processes_sort_cpu">CPU</string>

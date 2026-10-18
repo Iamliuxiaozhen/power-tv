@@ -96,7 +96,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
     }
 
     private fun bindHero(state: MonitorUiState, snapshot: SystemSnapshot) {
-        binding.heroModel.text = "${snapshot.device.manufacturer} ${snapshot.device.model}"
+        binding.heroModel.text = deviceDisplayName(snapshot)
         binding.heroMeta.text = context.getString(
             R.string.dashboard_hero_meta,
             snapshot.device.androidVersion,
@@ -292,11 +292,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
             }
         }
         val device = snapshot.device
-        val model = if (device.model.startsWith(device.manufacturer, ignoreCase = true)) {
-            device.model
-        } else {
-            "${device.manufacturer} ${device.model}"
-        }
+        val model = deviceDisplayName(snapshot)
         val values = listOf(
             context.getString(R.string.dashboard_device_model) to model,
             context.getString(R.string.dashboard_device_android) to
@@ -331,6 +327,19 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
         }
         view.setBackgroundResource(background)
         view.setTextColor(MaterialColors.getColor(view, textColorAttr))
+    }
+
+    private fun deviceDisplayName(snapshot: SystemSnapshot): String {
+        val device = snapshot.device
+        return if (device.model.startsWith(device.manufacturer, ignoreCase = true)) {
+            device.model
+        } else {
+            context.getString(
+                R.string.device_display_name,
+                device.manufacturer,
+                device.model,
+            )
+        }
     }
 
     private fun temperatureLabel(reading: TemperatureReading): String = when {
