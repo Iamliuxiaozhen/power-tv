@@ -71,7 +71,8 @@ class GpuSampler(
             File(devfreq, "gpu_load"),
             File(devfreq, "utilisation"),
             File(devfreq, "load"),
-        )(GpuSysfsParser::parsePercentage)
+            parser = GpuSysfsParser::parsePercentage,
+        )
 
     private fun <T> readFirst(vararg files: File?, parser: (String) -> T?): T? {
         for (file in files) {
