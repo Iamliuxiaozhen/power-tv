@@ -27,6 +27,13 @@ class FormattersTest {
     }
 
     @Test
+    fun `formats compact frequencies for dense rows`() {
+        assertEquals("2.4G", Formatters.compactFrequency(2_400))
+        assertEquals("800M", Formatters.compactFrequency(800))
+        assertEquals("—", Formatters.compactFrequency(null))
+    }
+
+    @Test
     fun `formats uptime at useful precision`() {
         assertEquals("2m", Formatters.uptime(125_000))
         assertEquals("3h 5m", Formatters.uptime((3 * 60 + 5) * 60_000L))

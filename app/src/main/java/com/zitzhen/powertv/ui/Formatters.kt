@@ -25,6 +25,16 @@ object Formatters {
         }
     }
 
+    /** Very compact frequency used inside per-core rows. */
+    fun compactFrequency(mhz: Int?): String {
+        if (mhz == null || mhz <= 0) return "—"
+        return if (mhz >= 1_000) {
+            String.format(Locale.US, "%.1fG", mhz / 1_000f)
+        } else {
+            "${mhz}M"
+        }
+    }
+
     fun bytes(bytes: Long?): String {
         if (bytes == null || bytes < 0L) return "—"
         val units = arrayOf("B", "KB", "MB", "GB", "TB")
