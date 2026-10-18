@@ -89,10 +89,16 @@ class CpuSampler(
         return null
     }
 
-    private fun Long?.toMhz(): Int? = when {
-        this == null || this <= 0L -> null
-        this >= 10_000_000L -> (this / 1_000_000L).toInt()
-        else -> (this / 1_000L).toInt()
+    private fun Long?.toMhz(): Int? {
+        if (this == null || this <= 0L) return null
+        val mhz = if (this >= 10_000_000L) {
+            (this / 1_000_000L).toInt()
+        } else {
+            (this / 1_000L).toInt()
+        }
+        // Some emulated/virtual cpufreq nodes expose placeholder values like
+        // 1/2 kHz. Anything outside a plausible CPU clock is not usable.
+        return mhz.takeIf { it in 100..10_000 }
     }
 
     private fun File.readTextOrNull(): String? =
