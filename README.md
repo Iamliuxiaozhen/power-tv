@@ -21,6 +21,7 @@
 - **内存**：已用/总量、可用、缓存、Swap，以及实时占比。
 - **电池**：电量、充电状态、温度、电压、电流。
 - **进程**：列出系统允许访问的进程，按内存或 CPU 排序，并明确解释 Android 的可见性限制。
+- **Shizuku（可选）**：用户主动授权后，通过 ADB shell 读取系统 CPU 占用与完整进程列表；未授权时自动回退普通读取。
 - **设计**：Material 3 组件、浅色/深色主题、中英双语、自定义脉冲图标与启动画面。
 - **隐私**：仅在本机采集数据，无网络权限，不上传任何信息。
 
@@ -28,14 +29,14 @@
 
 | 指标 | 数据来源 | 说明 |
 | --- | --- | --- |
-| CPU | `/proc/stat`、`/sys/.../cpufreq` | 新版 Android 可能向普通应用隐藏 `/proc/stat`，此时显示限制说明而不是假数据。 |
+| CPU | `/proc/stat`、`/sys/.../cpufreq`、Shizuku | 新版 Android 可能向普通应用隐藏 `/proc/stat`；授权 Shizuku 后可由 ADB shell 读取，未授权时显示限制说明而不是假数据。 |
 | GPU | 厂商 sysfs（kgsl / mali / devfreq） | Android 没有公开 GPU 利用率 API，只有内核开放节点时可用。 |
 | 温度 | `HardwarePropertiesManager`、thermal sysfs、电池广播 | 不同厂商传感器命名与权限不同，缺失的传感器会自动省略。 |
 | 内存 | `/proc/meminfo`、`ActivityManager.MemoryInfo` | 权限内可稳定读取。 |
 | 电池 | `ACTION_BATTERY_CHANGED`、`BatteryManager` | 通过粘性广播读取，无需注册常驻接收器。 |
-| 进程 | `/proc/<pid>` | Android 10+ 普通应用通常只能看到自身进程；不做 Root、不申请特殊权限。 |
+| 进程 | `/proc/<pid>`、Shizuku | Android 10+ 普通应用通常只能看到自身进程；授权 Shizuku 后可列出全部进程。不做 Root。 |
 
-应用仅声明常规 Android 组件，不申请 `INTERNET`、定位、存储或无障碍权限。
+应用仅声明常规 Android 组件，不申请 `INTERNET`、定位、存储或无障碍权限。Shizuku 为可选授权，仅在你主动授予后启用；所有数据仍只在本机处理。
 
 ## 工程结构
 
@@ -45,6 +46,7 @@ app/src/main/java/com/zitzhen/powertv/
 ├── data/
 │   ├── model/                   # 不可变遥测模型
 │   ├── proc/                    # /proc CPU、内存、进程采样与解析
+│   ├── shizuku/                 # Shizuku UserService 与连接管理
 │   └── system/                  # 温度、电池、GPU、设备与聚合器
 └── ui/
     ├── MonitorViewModel.kt      # StateFlow + 1 秒采样循环
@@ -74,15 +76,15 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ## 已知边界
 
-- Emulator / 部分新系统会禁止读取 `/proc/stat`，此时系统级 CPU 占用不可得；卡片会直接说明原因。
+- Emulator / 部分新系统会禁止普通应用读取 `/proc/stat`，此时系统级 CPU 占用不可得；授权 Shizuku 后可读取，卡片会直接说明原因。
 - GPU 计数依赖具体内核，模拟器和多数量产机可能完全不可用。
-- 进程列表受 Android 沙箱限制，通常只显示 power-tv 自身。
+- 进程列表受 Android 沙箱限制，通常只显示 power-tv 自身；授权 Shizuku 后可见全部进程。
 - 温度传感器名称主要由内核提供，个别厂商名称会原样显示。
-- 当前为 MVP，暂未加入历史持久化、桌面小组件、通知栏监控或 Shizuku/ADB 数据桥。
+- 当前为 MVP，暂未加入历史持久化、桌面小组件或通知栏监控。
 
 ## 后续方向
 
-1. 可选 Shizuku / ADB 数据桥，在用户明确授权后补全系统 CPU 与进程数据。
+1. ~~Shizuku / ADB 数据桥~~：已在进程页提供授权与状态管理。
 2. 可配置采样间隔、图表时间窗与温度阈值告警。
 3. 桌面小组件、前台服务与通知栏实时概览。
 4. 平板/横屏自适应布局与更完整的无障碍语义。
