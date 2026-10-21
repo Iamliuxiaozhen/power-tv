@@ -10,3 +10,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+# Shizuku loads the user service by class name in a separate process, so the
+# service and its AIDL stubs must survive R8 obfuscation.
+-keep class com.zitzhen.powertv.data.shizuku.ShizukuProcService { *; }
+-keep interface com.zitzhen.powertv.data.shizuku.IProcReader { *; }
+-keep class com.zitzhen.powertv.data.shizuku.IProcReader$Stub { *; }
