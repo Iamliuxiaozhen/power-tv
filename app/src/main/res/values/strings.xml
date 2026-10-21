@@ -20,7 +20,7 @@
     <string name="dashboard_cpu_model_unknown">Processor</string>
     <string name="dashboard_cpu_freq_max">Max %1$s</string>
     <string name="dashboard_cpu_cores">PER-CORE LOAD</string>
-    <string name="dashboard_cpu_note">This Android build blocks /proc/stat for normal apps, so system CPU load is unavailable without root. Frequencies and core state are still shown when the kernel exposes them.</string>
+    <string name="dashboard_cpu_note">This Android build blocks /proc/stat for normal apps. Open Processes and connect Shizuku to unlock system CPU load. Frequencies and core state are still shown when the kernel exposes them.</string>
     <string name="dashboard_core_name">C%1$d</string>
     <string name="dashboard_core_offline">offline</string>
 
@@ -76,8 +76,18 @@
     <string name="thermal_status_shutdown">Shutdown</string>
     <string name="thermal_status_unknown">Unknown</string>
 
-    <string name="processes_visibility_title">Android visibility limit</string>
-    <string name="processes_visibility_body">Modern Android hides other apps\' /proc entries from normal apps. power-tv shows every process the system allows — no root, no special permissions.</string>
+    <string name="shizuku_title">Shizuku</string>
+    <string name="shizuku_body_connected">Connected through ADB shell. System CPU load and every process are readable.</string>
+    <string name="shizuku_body_permission">Shizuku is running. Grant access to read system CPU load and the full process list.</string>
+    <string name="shizuku_body_denied">Access was denied. Open Shizuku and allow power-tv manually.</string>
+    <string name="shizuku_body_not_running">Android hides other processes from normal apps. Start or install Shizuku to unlock system CPU load and the full process list.</string>
+    <string name="shizuku_body_connecting">Starting the privileged reader service…</string>
+    <string name="shizuku_body_unsupported">Shizuku 11 or newer is required.</string>
+    <string name="shizuku_action_grant">Grant</string>
+    <string name="shizuku_action_open">Open Shizuku</string>
+    <string name="shizuku_action_install">Get Shizuku</string>
+    <string name="shizuku_action_manage">Manage</string>
+    <string name="shizuku_action_connecting">Connecting…</string>
     <plurals name="processes_count">
         <item quantity="one">%1$d process visible</item>
         <item quantity="other">%1$d processes visible</item>

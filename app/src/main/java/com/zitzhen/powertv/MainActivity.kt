@@ -12,6 +12,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.zitzhen.powertv.data.shizuku.ShizukuState
+import com.zitzhen.powertv.data.shizuku.ShizukuStatus
 import com.zitzhen.powertv.databinding.ActivityMainBinding
 import com.zitzhen.powertv.ui.DashboardBinder
 import com.zitzhen.powertv.ui.MonitorUiState
@@ -25,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var dashboardBinder: DashboardBinder
     private lateinit var processBinder: ProcessBinder
     private val viewModel: MonitorViewModel by viewModels()
+    private var currentShizukuState: ShizukuState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,20 @@ class MainActivity : AppCompatActivity() {
         binding.toolbar.menu.findItem(R.id.action_about)?.setOnMenuItemClickListener {
             showAboutDialog()
             true
+        }
+
+        binding.processes.shizukuAction.setOnClickListener {
+            val state = currentShizukuState ?: return@setOnClickListener
+            when (state.status) {
+                ShizukuStatus.PERMISSION_REQUIRED -> viewModel.requestShizukuPermission()
+                ShizukuStatus.NOT_RUNNING,
+                ShizukuStatus.PERMISSION_DENIED,
+                ShizukuStatus.CONNECTED,
+                -> (application as PowerTvApp).shizuku.openManager()
+                ShizukuStatus.CONNECTING,
+                ShizukuStatus.UNSUPPORTED,
+                -> Unit
+            }
         }
 
         binding.bottomNav.setOnItemSelectedListener { item ->
@@ -69,7 +86,8 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect(::render)
+                launch { viewModel.uiState.collect(::render) }
+                launch { viewModel.shizukuState.collect(::renderShizuku) }
             }
         }
     }
@@ -87,6 +105,40 @@ class MainActivity : AppCompatActivity() {
     private fun render(state: MonitorUiState) {
         dashboardBinder.bind(state)
         processBinder.bind(state)
+    }
+
+    private fun renderShizuku(state: ShizukuState) {
+        currentShizukuState = state
+        val body = when (state.status) {
+            ShizukuStatus.UNSUPPORTED -> R.string.shizuku_body_unsupported
+            ShizukuStatus.NOT_RUNNING -> R.string.shizuku_body_not_running
+            ShizukuStatus.PERMISSION_REQUIRED -> R.string.shizuku_body_permission
+            ShizukuStatus.PERMISSION_DENIED -> R.string.shizuku_body_denied
+            ShizukuStatus.CONNECTING -> R.string.shizuku_body_connecting
+            ShizukuStatus.CONNECTED -> R.string.shizuku_body_connected
+        }
+        binding.processes.shizukuBody.setText(body)
+
+        val action = when (state.status) {
+            ShizukuStatus.PERMISSION_REQUIRED -> R.string.shizuku_action_grant
+            ShizukuStatus.PERMISSION_DENIED,
+            ShizukuStatus.CONNECTED,
+            -> R.string.shizuku_action_manage
+            ShizukuStatus.NOT_RUNNING -> if (state.managerInstalled) {
+                R.string.shizuku_action_open
+            } else {
+                R.string.shizuku_action_install
+            }
+            ShizukuStatus.CONNECTING -> R.string.shizuku_action_connecting
+            ShizukuStatus.UNSUPPORTED -> null
+        }
+        binding.processes.shizukuAction.apply {
+            isVisible = action != null
+            if (action != null) {
+                setText(action)
+                isEnabled = state.status != ShizukuStatus.CONNECTING
+            }
+        }
     }
 
     private fun showDashboard(dashboardVisible: Boolean) {

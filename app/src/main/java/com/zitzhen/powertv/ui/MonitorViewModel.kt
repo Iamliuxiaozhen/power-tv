@@ -5,7 +5,10 @@ import android.os.SystemClock
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.zitzhen.powertv.PowerTvApp
 import com.zitzhen.powertv.data.model.SystemSnapshot
+import com.zitzhen.powertv.data.shizuku.ShizukuManager
+import com.zitzhen.powertv.data.shizuku.ShizukuState
 import com.zitzhen.powertv.data.system.SystemMonitor
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -30,9 +33,11 @@ data class MonitorUiState(
 )
 
 class MonitorViewModel(application: Application) : AndroidViewModel(application) {
-    private val monitor = SystemMonitor(application)
+    private val shizuku: ShizukuManager = (application as PowerTvApp).shizuku
+    private val monitor = SystemMonitor(application, shizuku)
     private val _uiState = MutableStateFlow(MonitorUiState())
     val uiState: StateFlow<MonitorUiState> = _uiState.asStateFlow()
+    val shizukuState: StateFlow<ShizukuState> = shizuku.state
 
     private var samplingJob: Job? = null
     private var tick = 0
@@ -40,6 +45,7 @@ class MonitorViewModel(application: Application) : AndroidViewModel(application)
     fun start() {
         if (samplingJob?.isActive == true) return
         tick = 0
+        shizuku.refresh()
         samplingJob = viewModelScope.launch {
             while (isActive) {
                 val startedAt = SystemClock.elapsedRealtime()
@@ -70,6 +76,10 @@ class MonitorViewModel(application: Application) : AndroidViewModel(application)
         samplingJob?.cancel()
         samplingJob = null
         _uiState.update { it.copy(isLive = false) }
+    }
+
+    fun requestShizukuPermission() {
+        shizuku.requestPermission()
     }
 
     private fun publish(snapshot: SystemSnapshot) {

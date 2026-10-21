@@ -8,12 +8,16 @@ import com.zitzhen.powertv.data.model.TemperatureReading
 import com.zitzhen.powertv.data.proc.CpuSampler
 import com.zitzhen.powertv.data.proc.MemorySampler
 import com.zitzhen.powertv.data.proc.ProcessSampler
+import com.zitzhen.powertv.data.shizuku.ShizukuManager
 
 /**
  * Aggregates all samplers into one immutable UI state. Must be called from a
  * background thread; file and broadcast reads are performed synchronously.
  */
-class SystemMonitor(context: Context) {
+class SystemMonitor(
+    context: Context,
+    private val shizuku: ShizukuManager,
+) {
     private val appContext = context.applicationContext
     private val cpuSampler = CpuSampler()
     private val memorySampler = MemorySampler(appContext)
@@ -32,14 +36,15 @@ class SystemMonitor(context: Context) {
     fun sample(includeProcesses: Boolean): SystemSnapshot {
         val battery = batterySampler.sample()
         val thermal = thermalSampler.sample(battery.temperatureCelsius)
+        val privilegedCpuStat = shizuku.readCpuStat()
         if (includeProcesses) {
-            processes = processSampler.sample()
+            processes = processSampler.sample(shizuku.readProcessTable(), privilegedCpuStat)
         }
 
         return SystemSnapshot(
             timestampMillis = System.currentTimeMillis(),
             device = deviceInfo.copy(uptimeMillis = DeviceInfoSampler.sample().uptimeMillis),
-            cpu = cpuSampler.sample(),
+            cpu = cpuSampler.sample(privilegedCpuStat),
             gpu = gpuSampler.sample(thermal),
             memory = memorySampler.sample(),
             thermal = thermal,
@@ -49,7 +54,8 @@ class SystemMonitor(context: Context) {
     }
 
     fun sampleProcesses(): ProcessSnapshot {
-        processes = processSampler.sample()
+        val privilegedCpuStat = shizuku.readCpuStat()
+        processes = processSampler.sample(shizuku.readProcessTable(), privilegedCpuStat)
         return processes
     }
 }
