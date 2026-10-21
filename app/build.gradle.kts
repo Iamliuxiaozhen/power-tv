@@ -12,8 +12,8 @@ android {
         applicationId = "com.zitzhen.powertv"
         minSdk = 24
         targetSdk = 37
-        versionCode = 3
-        versionName = "1.1.00"
+        versionCode = 4
+        versionName = "1.2.00(shizuku-test)"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
