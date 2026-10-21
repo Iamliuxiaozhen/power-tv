@@ -31,7 +31,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center"
-                    android:contentDescription="@string/processes_visibility_title"
+                    android:contentDescription="@string/shizuku_title"
                     android:src="@drawable/ic_info"
                     app:tint="?attr/colorPrimary" />
             </FrameLayout>
@@ -44,19 +44,33 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/shizuku_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/processes_visibility_title"
+                    android:text="@string/shizuku_title"
                     android:textAppearance="@style/TextAppearance.Material3.TitleSmall" />
 
                 <TextView
+                    android:id="@+id/shizuku_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:lineSpacingExtra="2dp"
-                    android:text="@string/processes_visibility_body"
                     android:textColor="?attr/colorOnSurfaceVariant"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    tools:text="@string/shizuku_body_not_running" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/shizuku_action"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:minHeight="40dp"
+                    android:textSize="13sp"
+                    android:visibility="gone"
+                    tools:text="@string/shizuku_action_grant"
+                    tools:visibility="visible" />
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

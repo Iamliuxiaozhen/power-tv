@@ -20,7 +20,7 @@
     <string name="dashboard_cpu_model_unknown">處理器</string>
     <string name="dashboard_cpu_freq_max">最高 %1$s</string>
     <string name="dashboard_cpu_cores">每核心負載</string>
-    <string name="dashboard_cpu_note">此 Android 版本禁止一般應用讀取 /proc/stat，未取得 Root 時無法顯示系統 CPU 佔用。若內核開放頻率與核心狀態，仍會在此顯示。</string>
+    <string name="dashboard_cpu_note">此 Android 版本禁止一般應用讀取 /proc/stat。前往行程頁連接 Shizuku 即可解鎖系統 CPU 佔用；內核開放頻率與核心狀態時仍會顯示。</string>
     <string name="dashboard_core_name">C%1$d</string>
     <string name="dashboard_core_offline">離線</string>
 
@@ -75,8 +75,18 @@
     <string name="thermal_status_shutdown">關機</string>
     <string name="thermal_status_unknown">未知</string>
 
-    <string name="processes_visibility_title">Android 行程可見性限制</string>
-    <string name="processes_visibility_body">現代 Android 會向一般應用隱藏其他應用的 /proc 條目。power-tv 會顯示系統允許訪問的全部行程——無需 Root，無需特殊權限。</string>
+    <string name="shizuku_title">Shizuku</string>
+    <string name="shizuku_body_connected">已透過 ADB shell 連接，系統 CPU 與全部行程均可讀取。</string>
+    <string name="shizuku_body_permission">Shizuku 正在運行，授權後即可讀取系統 CPU 與完整行程列表。</string>
+    <string name="shizuku_body_denied">授權已被拒絕，請在 Shizuku 中手動為 power-tv 開啟權限。</string>
+    <string name="shizuku_body_not_running">Android 會向一般應用隱藏其他行程。啟動或安裝 Shizuku 後可解鎖系統 CPU 與完整行程列表。</string>
+    <string name="shizuku_body_connecting">正在啟動特權讀取服務…</string>
+    <string name="shizuku_body_unsupported">需要 Shizuku 11 或更高版本。</string>
+    <string name="shizuku_action_grant">授權</string>
+    <string name="shizuku_action_open">開啟 Shizuku</string>
+    <string name="shizuku_action_install">取得 Shizuku</string>
+    <string name="shizuku_action_manage">管理</string>
+    <string name="shizuku_action_connecting">連接中…</string>
     <plurals name="processes_count">
         <item quantity="other">可見 %1$d 個</item>
     </plurals>
