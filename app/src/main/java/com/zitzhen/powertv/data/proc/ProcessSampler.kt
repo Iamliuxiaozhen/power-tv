@@ -41,8 +41,11 @@ class ProcessSampler(
     private var previousTotalTicks: Long? = null
     private var previousSampleElapsedMillis: Long? = null
 
-    fun sample(): ProcessSnapshot {
-        val currentTotalTicks = readTotalCpuTicks()
+    fun sample(
+        privilegedTable: String? = null,
+        privilegedCpuStat: String? = null,
+    ): ProcessSnapshot {
+        val currentTotalTicks = readTotalCpuTicks(privilegedCpuStat)
         val totalDelta = previousTotalTicks?.let { previous ->
             currentTotalTicks?.minus(previous)?.takeIf { it > 0L }
         }
@@ -52,12 +55,16 @@ class ProcessSampler(
             (sampleElapsedMillis - previous).takeIf { it > 0L }?.div(1_000.0)
         }
 
-        val rawProcesses = procRoot.listFiles()
-            ?.asSequence()
-            ?.filter { it.isDirectory && it.name.all(Char::isDigit) }
-            ?.mapNotNull { dir -> readProcess(dir) }
-            ?.toList()
-            ?: emptyList()
+        val rawProcesses = if (privilegedTable != null) {
+            ProcessTableCodec.decode(privilegedTable).map(::toRawProcess)
+        } else {
+            procRoot.listFiles()
+                ?.asSequence()
+                ?.filter { it.isDirectory && it.name.all(Char::isDigit) }
+                ?.mapNotNull { dir -> readProcess(dir) }
+                ?.toList()
+                ?: emptyList()
+        }
 
         val processes = rawProcesses
             .map { raw ->
@@ -137,8 +144,27 @@ class ProcessSampler(
         return RawProcess(info = info, cpuTicks = stat.cpuTicks, startTimeTicks = stat.startTimeTicks)
     }
 
-    private fun readTotalCpuTicks(): Long? = runCatching {
-        CpuStatParser.parse(File(procRoot, "stat").readText())["cpu"]?.total
+    private fun toRawProcess(record: ProcRecord): RawProcess {
+        val info = ProcessInfo(
+            pid = record.pid,
+            name = record.name,
+            state = record.state,
+            uid = record.uid,
+            memoryBytes = (record.residentPages * pageSize).coerceAtLeast(0L),
+            cpuPercent = null,
+            isOwnProcess = record.uid == ownUid,
+        )
+        return RawProcess(
+            info = info,
+            cpuTicks = record.cpuTicks,
+            startTimeTicks = record.startTimeTicks,
+        )
+    }
+
+    private fun readTotalCpuTicks(privilegedCpuStat: String?): Long? = runCatching {
+        val text = privilegedCpuStat?.takeIf { it.isNotBlank() }
+            ?: File(procRoot, "stat").readText()
+        CpuStatParser.parse(text)["cpu"]?.total
     }.getOrNull()
 
     private companion object {

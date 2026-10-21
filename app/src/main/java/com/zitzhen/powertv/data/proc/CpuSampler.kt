@@ -20,9 +20,9 @@ class CpuSampler(
     private var previousTimes: Map<String, CpuStatParser.CpuTimes> = emptyMap()
     private val model: String? by lazy { readCpuModel() }
 
-    fun sample(): CpuMetrics {
+    fun sample(privilegedStat: String? = null): CpuMetrics {
         val currentTimes = runCatching {
-            CpuStatParser.parse(procStatFile.readText())
+            CpuStatParser.parse(privilegedStat?.takeIf { it.isNotBlank() } ?: procStatFile.readText())
         }.getOrDefault(emptyMap())
 
         val usages = currentTimes.mapValues { (name, times) ->
