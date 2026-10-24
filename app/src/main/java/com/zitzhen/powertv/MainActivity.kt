@@ -12,6 +12,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.zitzhen.powertv.data.shizuku.ReaderMode
 import com.zitzhen.powertv.data.shizuku.ShizukuState
 import com.zitzhen.powertv.data.shizuku.ShizukuStatus
 import com.zitzhen.powertv.databinding.ActivityMainBinding
@@ -51,11 +52,22 @@ class MainActivity : AppCompatActivity() {
                 ShizukuStatus.PERMISSION_REQUIRED -> viewModel.requestShizukuPermission()
                 ShizukuStatus.NOT_RUNNING,
                 ShizukuStatus.PERMISSION_DENIED,
-                ShizukuStatus.CONNECTED,
                 -> (application as PowerTvApp).shizuku.openManager()
+                ShizukuStatus.CONNECTED -> when (state.mode) {
+                    ReaderMode.BINDER -> viewModel.retryShizukuService()
+                    ReaderMode.USER_SERVICE -> (application as PowerTvApp).shizuku.openManager()
+                }
+                ShizukuStatus.START_FAILED -> viewModel.retryShizukuService()
                 ShizukuStatus.CONNECTING,
                 ShizukuStatus.UNSUPPORTED,
                 -> Unit
+            }
+        }
+
+        binding.processes.shizukuActionSecondary.setOnClickListener {
+            val state = currentShizukuState ?: return@setOnClickListener
+            if (state.status == ShizukuStatus.START_FAILED) {
+                viewModel.useShizukuBasicMode()
             }
         }
 
@@ -115,15 +127,26 @@ class MainActivity : AppCompatActivity() {
             ShizukuStatus.PERMISSION_REQUIRED -> R.string.shizuku_body_permission
             ShizukuStatus.PERMISSION_DENIED -> R.string.shizuku_body_denied
             ShizukuStatus.CONNECTING -> R.string.shizuku_body_connecting
-            ShizukuStatus.CONNECTED -> R.string.shizuku_body_connected
+            ShizukuStatus.CONNECTED -> when (state.mode) {
+                ReaderMode.BINDER -> R.string.shizuku_body_connected_basic
+                ReaderMode.USER_SERVICE -> R.string.shizuku_body_connected
+            }
+            ShizukuStatus.START_FAILED -> if (state.suspectedRomBug) {
+                R.string.shizuku_body_start_failed_mediatek
+            } else {
+                R.string.shizuku_body_start_failed
+            }
         }
         binding.processes.shizukuBody.setText(body)
 
         val action = when (state.status) {
             ShizukuStatus.PERMISSION_REQUIRED -> R.string.shizuku_action_grant
-            ShizukuStatus.PERMISSION_DENIED,
-            ShizukuStatus.CONNECTED,
-            -> R.string.shizuku_action_manage
+            ShizukuStatus.PERMISSION_DENIED -> R.string.shizuku_action_manage
+            ShizukuStatus.CONNECTED -> when (state.mode) {
+                ReaderMode.BINDER -> R.string.shizuku_action_retry_service
+                ReaderMode.USER_SERVICE -> R.string.shizuku_action_manage
+            }
+            ShizukuStatus.START_FAILED -> R.string.shizuku_action_retry
             ShizukuStatus.NOT_RUNNING -> if (state.managerInstalled) {
                 R.string.shizuku_action_open
             } else {
@@ -137,6 +160,17 @@ class MainActivity : AppCompatActivity() {
             if (action != null) {
                 setText(action)
                 isEnabled = state.status != ShizukuStatus.CONNECTING
+            }
+        }
+
+        val secondary = when (state.status) {
+            ShizukuStatus.START_FAILED -> R.string.shizuku_action_basic_mode
+            else -> null
+        }
+        binding.processes.shizukuActionSecondary.apply {
+            isVisible = secondary != null
+            if (secondary != null) {
+                setText(secondary)
             }
         }
     }

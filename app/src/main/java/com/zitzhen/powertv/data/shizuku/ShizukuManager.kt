@@ -34,11 +34,33 @@ enum class ShizukuStatus {
 
     /** The privileged reader service is ready. */
     CONNECTED,
+
+    /**
+     * Permission was granted but the privileged reader service could not be
+     * started (e.g. ROM bugs that crash Shizuku user services on startup).
+     */
+    START_FAILED,
+}
+
+/** How privileged process data is obtained once Shizuku access is granted. */
+enum class ReaderMode {
+    /** Spawns a Shizuku user service that reads /proc with shell identity. */
+    USER_SERVICE,
+
+    /**
+     * Calls ActivityManager directly over a Shizuku-wrapped binder. Spawns no
+     * child process, so it survives ROMs where user services crash; per-process
+     * CPU usage is unavailable in this mode.
+     */
+    BINDER,
 }
 
 data class ShizukuState(
     val status: ShizukuStatus = ShizukuStatus.NOT_RUNNING,
     val managerInstalled: Boolean = false,
+    val mode: ReaderMode = ReaderMode.USER_SERVICE,
+    /** True when START_FAILED looks like the known MediaTek/Xiaomi ROM bug. */
+    val suspectedRomBug: Boolean = false,
 )
 
 /**
@@ -58,6 +80,18 @@ class ShizukuManager(private val context: Context) {
 
     private var started = false
     private var binding = false
+
+    private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+    @Volatile
+    private var mode: ReaderMode =
+        if (prefs.getString(KEY_READER_MODE, null) == MODE_VALUE_BINDER) {
+            ReaderMode.BINDER
+        } else {
+            ReaderMode.USER_SERVICE
+        }
+
+    private var startWatchdog: Runnable? = null
 
     private val binderReceivedListener = Shizuku.OnBinderReceivedListener {
         mainHandler.post { refresh() }
@@ -82,12 +116,26 @@ class ShizukuManager(private val context: Context) {
             .version(packageVersionCode())
     }
 
-    private val connection = object : ServiceConnection {
+    private val connection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
+            if (mode == ReaderMode.BINDER) {
+                // The user switched to binder mode while this bind was in
+                // flight; drop the connection instead of adopting it.
+                binding = false
+                runCatching {
+                    Shizuku.unbindUserService(
+                        userServiceArgs,
+                        this@ShizukuManager.connection,
+                        true,
+                    )
+                }
+                return
+            }
+            cancelStartWatchdog()
             binding = false
             if (binder == null || !binder.pingBinder()) {
-                onReaderLost(ShizukuStatus.CONNECTING)
-                mainHandler.post { refresh() }
+                reader = null
+                publish(ShizukuStatus.START_FAILED)
                 return
             }
             reader = IProcReader.Stub.asInterface(binder)
@@ -95,10 +143,21 @@ class ShizukuManager(private val context: Context) {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
+            if (mode == ReaderMode.BINDER) return
+            cancelStartWatchdog()
             binding = false
+            val wasConnected = reader != null
             reader = null
-            publish(ShizukuStatus.CONNECTING)
-            mainHandler.post { refresh() }
+            if (wasConnected) {
+                // The service ran before; it was likely killed and a rebind is
+                // worth trying (the watchdog covers a failed restart).
+                publish(ShizukuStatus.CONNECTING)
+                mainHandler.post { refresh() }
+            } else {
+                // Disconnected before the binder ever arrived: the service
+                // process died during startup.
+                publish(ShizukuStatus.START_FAILED)
+            }
         }
     }
 
@@ -144,6 +203,9 @@ class ShizukuManager(private val context: Context) {
 
         if (reader != null) {
             publish(ShizukuStatus.CONNECTED)
+        } else if (mode == ReaderMode.BINDER) {
+            // Binder mode needs no service handshake; permission is enough.
+            publish(ShizukuStatus.CONNECTED)
         } else if (!binding) {
             publish(ShizukuStatus.CONNECTING)
             bind()
@@ -152,6 +214,34 @@ class ShizukuManager(private val context: Context) {
 
     fun requestPermission() {
         runCatching { Shizuku.requestPermission(REQUEST_CODE) }
+    }
+
+    /**
+     * Switches to binder-direct basic mode and persists the choice, so devices
+     * where the user service can never start stay usable across restarts.
+     */
+    fun useBinderFallback() {
+        cancelStartWatchdog()
+        if (binding || reader != null) {
+            runCatching {
+                Shizuku.unbindUserService(userServiceArgs, connection, true)
+            }
+            binding = false
+            reader = null
+        }
+        mode = ReaderMode.BINDER
+        prefs.edit().putString(KEY_READER_MODE, MODE_VALUE_BINDER).apply()
+        refresh()
+    }
+
+    /** Switches back to the privileged user service and retries starting it. */
+    fun retryUserService() {
+        cancelStartWatchdog()
+        binding = false
+        reader = null
+        mode = ReaderMode.USER_SERVICE
+        prefs.edit().remove(KEY_READER_MODE).apply()
+        refresh()
     }
 
     @Suppress("DEPRECATION")
@@ -164,11 +254,21 @@ class ShizukuManager(private val context: Context) {
         }
     }.getOrDefault(1)
 
-    /** Returns the raw `/proc/stat` contents, or null when Shizuku is not ready. */
-    fun readCpuStat(): String? = read { it.readCpuStat() }
+    /**
+     * Returns the raw `/proc/stat` contents, or null when Shizuku is not ready.
+     * Always null in binder mode: the binder API cannot read files, so the CPU
+     * sampler falls back to whatever the app itself can read.
+     */
+    fun readCpuStat(): String? =
+        if (mode == ReaderMode.BINDER) null else read { it.readCpuStat() }
 
     /** Returns the encoded process table, or null when Shizuku is not ready. */
-    fun readProcessTable(): String? = read { it.readProcessTable() }
+    fun readProcessTable(): String? =
+        if (mode == ReaderMode.BINDER) {
+            ActivityManagerProcessReader.readProcessTable()
+        } else {
+            read { it.readProcessTable() }
+        }
 
     fun openManager() {
         val managerIntent = context.packageManager
@@ -189,8 +289,33 @@ class ShizukuManager(private val context: Context) {
             Shizuku.bindUserService(userServiceArgs, connection)
         }.onFailure {
             binding = false
+            cancelStartWatchdog()
             publish(ShizukuStatus.NOT_RUNNING)
+            return
         }
+        armStartWatchdog()
+    }
+
+    /**
+     * The Shizuku starter reports nothing when the user service process dies
+     * before delivering its binder (e.g. the MediaTek ROM bug); without a
+     * timeout the UI would spin on "connecting" forever.
+     */
+    private fun armStartWatchdog() {
+        cancelStartWatchdog()
+        val watchdog = Runnable {
+            if (mode == ReaderMode.USER_SERVICE && binding && reader == null) {
+                binding = false
+                publish(ShizukuStatus.START_FAILED)
+            }
+        }
+        startWatchdog = watchdog
+        mainHandler.postDelayed(watchdog, START_TIMEOUT_MS)
+    }
+
+    private fun cancelStartWatchdog() {
+        startWatchdog?.let { mainHandler.removeCallbacks(it) }
+        startWatchdog = null
     }
 
     private fun read(block: (IProcReader) -> String): String? {
@@ -213,13 +338,38 @@ class ShizukuManager(private val context: Context) {
     }
 
     private fun onReaderLost(status: ShizukuStatus) {
+        cancelStartWatchdog()
         binding = false
         reader = null
         publish(status)
     }
 
     private fun publish(status: ShizukuStatus) {
-        _state.value = ShizukuState(status = status, managerInstalled = isManagerInstalled())
+        _state.value = ShizukuState(
+            status = status,
+            managerInstalled = isManagerInstalled(),
+            mode = mode,
+            suspectedRomBug = status == ShizukuStatus.START_FAILED && isLikelyMediaTekRom(),
+        )
+    }
+
+    /**
+     * The Shizuku user-service startup crash in issue #1198 is specific to
+     * MediaTek-based Xiaomi ROMs, so the failure copy can name the cause.
+     */
+    private fun isLikelyMediaTekRom(): Boolean {
+        val parts = buildList {
+            add(Build.HARDWARE)
+            add(Build.BOARD)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                add(Build.SOC_MANUFACTURER)
+                add(Build.SOC_MODEL)
+            }
+        }
+        return parts.any { part ->
+            val value = part.lowercase()
+            value.contains("mediatek") || value.contains("mtk") || value.startsWith("mt")
+        }
     }
 
     private fun isManagerInstalled(): Boolean = runCatching {
@@ -231,5 +381,9 @@ class ShizukuManager(private val context: Context) {
         const val REQUEST_CODE = 1001
         const val MANAGER_PACKAGE = "moe.shizuku.privileged.api"
         const val DOWNLOAD_URL = "https://shizuku.rikka.app/download/"
+        const val START_TIMEOUT_MS = 8_000L
+        const val PREFS_NAME = "powertv"
+        const val KEY_READER_MODE = "shizuku_reader_mode"
+        const val MODE_VALUE_BINDER = "binder"
     }
 }

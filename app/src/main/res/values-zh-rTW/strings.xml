@@ -82,10 +82,16 @@
     <string name="shizuku_body_not_running">Android 會向一般應用程式隱藏其他程序。啟動或安裝 Shizuku 後可解鎖系統 CPU 與完整程序列表。</string>
     <string name="shizuku_body_connecting">正在啟動特權讀取服務…</string>
     <string name="shizuku_body_unsupported">需要 Shizuku 11 或更高版本。</string>
+    <string name="shizuku_body_start_failed">特權讀取服務啟動失敗。可以重試，或切換到基礎模式：透過 Shizuku 直接列出應用程式程序（無單一程序 CPU 資料）。</string>
+    <string name="shizuku_body_start_failed_mediatek">特權讀取服務啟動失敗。此裝置的聯發科平台 ROM 存在已知缺陷，會導致 Shizuku 使用者服務當機（Shizuku issue #1198）。可以重試，或切換到基礎模式：透過 Shizuku 直接列出應用程式程序（無單一程序 CPU 資料）。</string>
+    <string name="shizuku_body_connected_basic">基礎模式：正透過 Shizuku 列出全部應用程式程序。單一程序 CPU 與系統 CPU 使用率不可用。</string>
     <string name="shizuku_action_grant">授權</string>
     <string name="shizuku_action_open">開啟 Shizuku</string>
     <string name="shizuku_action_install">取得 Shizuku</string>
     <string name="shizuku_action_manage">管理</string>
+    <string name="shizuku_action_retry">重試</string>
+    <string name="shizuku_action_basic_mode">使用基礎模式</string>
+    <string name="shizuku_action_retry_service">重試完整模式</string>
     <string name="shizuku_action_connecting">連線中…</string>
     <plurals name="processes_count">
         <item quantity="other">可見 %1$d 個</item>
