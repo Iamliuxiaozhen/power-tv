@@ -5,13 +5,21 @@
 | [English](README.md) | **[简体中文](README.zh-CN.md)** | [繁體中文](README.zh-TW.md) |
 | :---: | :---: | :---: |
 
-| 概览 · 浅色 | 详情 · 浅色 |
+## 截图
+
+| 概览首页 · 浅色 | 详情 · 浅色 |
 | --- | --- |
-| ![概览浅色](docs/screenshots/dashboard-light.png) | ![详情浅色](docs/screenshots/dashboard-details-light.png) |
+| ![概览首页浅色](docs/screenshots/dashboard-light.png) | ![详情浅色](docs/screenshots/dashboard-details-light.png) |
 
 | 概览 · 深色（中文） | 进程 · 深色（中文） |
 | --- | --- |
 | ![概览深色](docs/screenshots/dashboard-dark-zh.png) | ![进程深色](docs/screenshots/processes-dark-zh.png) |
+
+### 启动页
+
+<p align="center">
+  <img src="docs/screenshots/splash-light.png" width="280" alt="power-tv 启动页">
+</p>
 
 ## 功能
 

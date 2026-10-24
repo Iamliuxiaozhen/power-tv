@@ -5,13 +5,21 @@ A local-first Android system monitor inspired by [btop](https://github.com/arist
 | **[English](README.md)** | [简体中文](README.zh-CN.md) | [繁體中文](README.zh-TW.md) |
 | :---: | :---: | :---: |
 
-| Dashboard · light | Details · light |
+## Screenshots
+
+| Dashboard home · light | Details · light |
 | --- | --- |
-| ![Dashboard light](docs/screenshots/dashboard-light.png) | ![Dashboard details light](docs/screenshots/dashboard-details-light.png) |
+| ![Dashboard home light](docs/screenshots/dashboard-light.png) | ![Dashboard details light](docs/screenshots/dashboard-details-light.png) |
 
 | Dashboard · dark (Chinese) | Processes · dark (Chinese) |
 | --- | --- |
 | ![Dashboard dark](docs/screenshots/dashboard-dark-zh.png) | ![Processes dark](docs/screenshots/processes-dark-zh.png) |
+
+### Splash screen
+
+<p align="center">
+  <img src="docs/screenshots/splash-light.png" width="280" alt="power-tv splash screen">
+</p>
 
 ## Features
 
