@@ -4,6 +4,7 @@
 
     <string name="nav_dashboard">總覽</string>
     <string name="nav_processes">程序</string>
+    <string name="action_settings">設定</string>
     <string name="action_about">關於</string>
 
     <string name="status_live">即時</string>
@@ -110,4 +111,11 @@
     <string name="about_version">版本 %1$s</string>
     <string name="about_body">一款受 btop 啟發的本地優先 Android 系統監控器。\n\nCPU 與記憶體資料來自 /proc；溫度來自公開的熱管理 API 與可讀取的 sysfs 感應器；GPU 計數由廠商實作，可能無法取得。Android 會限制一般應用程式的程序可見性。\n\n所有遙測資料都留在本機——power-tv 不會存取網路。</string>
     <string name="about_ok">確定</string>
+
+    <string name="settings_title">設定</string>
+    <string name="settings_drag">拖曳排序</string>
+    <string name="settings_reset">恢復預設</string>
+    <string name="settings_reset_title">重設儀表板</string>
+    <string name="settings_reset_message">恢復預設模組順序並顯示所有卡片？</string>
+    <string name="settings_reset_confirm">重設</string>
 </resources>

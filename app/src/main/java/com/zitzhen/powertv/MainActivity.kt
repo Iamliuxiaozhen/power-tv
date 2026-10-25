@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import android.content.Intent
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zitzhen.powertv.data.shizuku.ReaderMode
 import com.zitzhen.powertv.data.shizuku.ShizukuState
@@ -20,6 +21,7 @@ import com.zitzhen.powertv.ui.DashboardBinder
 import com.zitzhen.powertv.ui.MonitorUiState
 import com.zitzhen.powertv.ui.MonitorViewModel
 import com.zitzhen.powertv.ui.ProcessBinder
+import com.zitzhen.powertv.ui.SettingsActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -43,6 +45,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.toolbar.menu.findItem(R.id.action_about)?.setOnMenuItemClickListener {
             showAboutDialog()
+            true
+        }
+        binding.toolbar.menu.findItem(R.id.action_settings)?.setOnMenuItemClickListener {
+            startActivity(Intent(this, SettingsActivity::class.java))
             true
         }
 
@@ -107,6 +113,12 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         viewModel.start()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val settings = (application as PowerTvApp).moduleSettings
+        dashboardBinder.applyModuleLayout(settings.loadOrder(), settings.loadVisible())
     }
 
     override fun onStop() {

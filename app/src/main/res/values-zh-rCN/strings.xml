@@ -4,6 +4,7 @@
 
     <string name="nav_dashboard">概览</string>
     <string name="nav_processes">进程</string>
+    <string name="action_settings">设置</string>
     <string name="action_about">关于</string>
 
     <string name="status_live">实时</string>
@@ -110,4 +111,11 @@
     <string name="about_version">版本 %1$s</string>
     <string name="about_body">一款受 btop 启发的本地优先 Android 系统监控器。\n\nCPU 与内存数据来自 /proc；温度来自公开热管理 API 与可读取的 sysfs 传感器；GPU 计数由厂商实现，可能不可用。Android 会限制普通应用的进程可见性。\n\n所有遥测数据都留在本机——power-tv 不访问网络。</string>
     <string name="about_ok">好</string>
+
+    <string name="settings_title">设置</string>
+    <string name="settings_drag">拖动排序</string>
+    <string name="settings_reset">恢复默认</string>
+    <string name="settings_reset_title">重置仪表盘</string>
+    <string name="settings_reset_message">恢复默认模块顺序并显示所有卡片？</string>
+    <string name="settings_reset_confirm">重置</string>
 </resources>

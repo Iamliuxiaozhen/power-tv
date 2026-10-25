@@ -13,6 +13,7 @@ import com.zitzhen.powertv.data.model.SystemSnapshot
 import com.zitzhen.powertv.data.model.TemperatureKind
 import com.zitzhen.powertv.data.model.TemperatureReading
 import com.zitzhen.powertv.data.model.ThermalStatus
+import com.zitzhen.powertv.data.settings.DashboardModule
 import com.zitzhen.powertv.databinding.ItemCoreBinding
 import com.zitzhen.powertv.databinding.ItemInfoRowBinding
 import com.zitzhen.powertv.databinding.ScreenDashboardBinding
@@ -29,6 +30,36 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
     private val inflater = LayoutInflater.from(context)
     private var coreCells: List<CoreCell> = emptyList()
     private var deviceRows: List<ItemInfoRowBinding> = emptyList()
+    private var appliedOrder: List<DashboardModule>? = null
+    private var appliedVisible: Set<DashboardModule>? = null
+
+    /**
+     * Reorders the dashboard cards to match [order] and hides any module not in [visible].
+     * Only touches the view hierarchy when the configuration actually changes to avoid
+     * disturbing live data binding on every tick.
+     */
+    fun applyModuleLayout(order: List<DashboardModule>, visible: Set<DashboardModule>) {
+        if (order == appliedOrder && visible == appliedVisible) return
+        appliedOrder = order
+        appliedVisible = visible
+
+        val cardById = mapOf(
+            DashboardModule.HERO to binding.cardHero,
+            DashboardModule.CPU to binding.cardCpu,
+            DashboardModule.GPU to binding.cardGpu,
+            DashboardModule.THERMAL to binding.cardThermal,
+            DashboardModule.MEMORY to binding.cardMemory,
+            DashboardModule.BATTERY to binding.cardBattery,
+            DashboardModule.DEVICE to binding.cardDevice,
+        )
+        val container = binding.cardsContainer
+        container.removeAllViews()
+        order.forEach { module ->
+            val card = cardById[module] ?: return@forEach
+            card.isVisible = module in visible
+            container.addView(card)
+        }
+    }
 
     fun bind(state: MonitorUiState) {
         val snapshot = state.snapshot
