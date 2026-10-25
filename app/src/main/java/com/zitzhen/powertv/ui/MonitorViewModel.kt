@@ -82,6 +82,14 @@ class MonitorViewModel(application: Application) : AndroidViewModel(application)
         shizuku.requestPermission()
     }
 
+    fun retryShizukuService() {
+        shizuku.retryUserService()
+    }
+
+    fun useShizukuBasicMode() {
+        shizuku.useShellFallback()
+    }
+
     private fun publish(snapshot: SystemSnapshot) {
         _uiState.update { state ->
             state.copy(

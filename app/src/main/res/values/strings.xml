@@ -83,10 +83,16 @@
     <string name="shizuku_body_not_running">Android hides other processes from normal apps. Start or install Shizuku to unlock system CPU load and the full process list.</string>
     <string name="shizuku_body_connecting">Starting the privileged reader service…</string>
     <string name="shizuku_body_unsupported">Shizuku 11 or newer is required.</string>
+    <string name="shizuku_body_start_failed">The privileged reader service failed to start. You can retry, or switch to basic mode, which reads processes through a Shizuku shell instead.</string>
+    <string name="shizuku_body_start_failed_mediatek">The privileged reader service failed to start. This device&#8217;s MediaTek-based ROM has a known bug that crashes Shizuku user services (Shizuku issue #1198). You can retry, or switch to basic mode, which reads processes through a Shizuku shell instead.</string>
+    <string name="shizuku_body_connected_basic">Basic mode: reading all processes through a Shizuku shell. Process names are shortened.</string>
     <string name="shizuku_action_grant">Grant</string>
     <string name="shizuku_action_open">Open Shizuku</string>
     <string name="shizuku_action_install">Get Shizuku</string>
     <string name="shizuku_action_manage">Manage</string>
+    <string name="shizuku_action_retry">Retry</string>
+    <string name="shizuku_action_basic_mode">Use basic mode</string>
+    <string name="shizuku_action_retry_service">Retry full mode</string>
     <string name="shizuku_action_connecting">Connecting…</string>
     <plurals name="processes_count">
         <item quantity="one">%1$d process visible</item>

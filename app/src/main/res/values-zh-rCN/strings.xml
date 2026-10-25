@@ -82,10 +82,16 @@
     <string name="shizuku_body_not_running">Android 会向普通应用隐藏其他进程。启动或安装 Shizuku 后可解锁系统 CPU 与完整进程列表。</string>
     <string name="shizuku_body_connecting">正在启动特权读取服务…</string>
     <string name="shizuku_body_unsupported">需要 Shizuku 11 或更高版本。</string>
+    <string name="shizuku_body_start_failed">特权读取服务启动失败。可以重试，或切换到基础模式：改由 Shizuku Shell 读取进程。</string>
+    <string name="shizuku_body_start_failed_mediatek">特权读取服务启动失败。此设备的联发科平台 ROM 存在已知缺陷，会导致 Shizuku 用户服务崩溃（Shizuku issue #1198）。可以重试，或切换到基础模式：改由 Shizuku Shell 读取进程。</string>
+    <string name="shizuku_body_connected_basic">基础模式：正通过 Shizuku Shell 读取全部进程。进程名会缩短显示。</string>
     <string name="shizuku_action_grant">授权</string>
     <string name="shizuku_action_open">打开 Shizuku</string>
     <string name="shizuku_action_install">获取 Shizuku</string>
     <string name="shizuku_action_manage">管理</string>
+    <string name="shizuku_action_retry">重试</string>
+    <string name="shizuku_action_basic_mode">使用基础模式</string>
+    <string name="shizuku_action_retry_service">重试完整模式</string>
     <string name="shizuku_action_connecting">连接中…</string>
     <plurals name="processes_count">
         <item quantity="other">可见 %1$d 个</item>

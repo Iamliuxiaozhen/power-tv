@@ -60,17 +60,35 @@
                     android:textSize="12sp"
                     tools:text="@string/shizuku_body_not_running" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/shizuku_action"
-                    style="@style/Widget.Material3.Button.TonalButton"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:minHeight="40dp"
-                    android:textSize="13sp"
-                    android:visibility="gone"
-                    tools:text="@string/shizuku_action_grant"
-                    tools:visibility="visible" />
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/shizuku_action"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="40dp"
+                        android:textSize="13sp"
+                        android:visibility="gone"
+                        tools:text="@string/shizuku_action_grant"
+                        tools:visibility="visible" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/shizuku_action_secondary"
+                        style="@style/Widget.Material3.Button.TextButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:minHeight="40dp"
+                        android:textSize="13sp"
+                        android:visibility="gone"
+                        tools:text="@string/shizuku_action_basic_mode"
+                        tools:visibility="visible" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
