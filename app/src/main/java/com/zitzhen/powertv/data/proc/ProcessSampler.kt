@@ -66,26 +66,17 @@ class ProcessSampler(
                 ?: emptyList()
         }
 
-        val cpuKnown = rawProcesses.all { it.cpuTicks >= 0L }
-        if (!cpuKnown) {
-            // Binder fallback rows carry a "no CPU data" sentinel; mixing tick
-            // deltas with absent values would report phantom 0% or stale
-            // numbers, so CPU percentages are dropped for the whole snapshot.
-            previousTicks = emptyMap()
-        }
-
         val processes = rawProcesses
             .map { raw ->
                 val previous = previousTicks[raw.info.pid]
                 val processDelta = if (
-                    cpuKnown && previous != null && previous.startTimeTicks == raw.startTimeTicks
+                    previous != null && previous.startTimeTicks == raw.startTimeTicks
                 ) {
                     raw.cpuTicks - previous.cpuTicks
                 } else {
                     null
                 }
                 val cpu = when {
-                    !cpuKnown -> null
                     processDelta == null || processDelta < 0L -> null
                     totalDelta != null ->
                         (processDelta.toDouble() / totalDelta * coreCount * 100.0)
@@ -103,10 +94,8 @@ class ProcessSampler(
                 .thenByDescending { it.memoryBytes })
             .take(MAX_PROCESSES)
 
-        if (cpuKnown) {
-            previousTicks = rawProcesses.associate { raw ->
-                raw.info.pid to Ticks(raw.cpuTicks, raw.startTimeTicks)
-            }
+        previousTicks = rawProcesses.associate { raw ->
+            raw.info.pid to Ticks(raw.cpuTicks, raw.startTimeTicks)
         }
         previousTotalTicks = currentTotalTicks
         previousSampleElapsedMillis = sampleElapsedMillis

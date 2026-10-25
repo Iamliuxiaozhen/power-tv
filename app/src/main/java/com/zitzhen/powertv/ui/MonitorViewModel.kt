@@ -87,7 +87,7 @@ class MonitorViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun useShizukuBasicMode() {
-        shizuku.useBinderFallback()
+        shizuku.useShellFallback()
     }
 
     private fun publish(snapshot: SystemSnapshot) {

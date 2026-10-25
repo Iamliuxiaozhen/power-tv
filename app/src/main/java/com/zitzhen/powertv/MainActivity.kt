@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                 ShizukuStatus.PERMISSION_DENIED,
                 -> (application as PowerTvApp).shizuku.openManager()
                 ShizukuStatus.CONNECTED -> when (state.mode) {
-                    ReaderMode.BINDER -> viewModel.retryShizukuService()
+                    ReaderMode.SHELL -> viewModel.retryShizukuService()
                     ReaderMode.USER_SERVICE -> (application as PowerTvApp).shizuku.openManager()
                 }
                 ShizukuStatus.START_FAILED -> viewModel.retryShizukuService()
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
             ShizukuStatus.PERMISSION_DENIED -> R.string.shizuku_body_denied
             ShizukuStatus.CONNECTING -> R.string.shizuku_body_connecting
             ShizukuStatus.CONNECTED -> when (state.mode) {
-                ReaderMode.BINDER -> R.string.shizuku_body_connected_basic
+                ReaderMode.SHELL -> R.string.shizuku_body_connected_basic
                 ReaderMode.USER_SERVICE -> R.string.shizuku_body_connected
             }
             ShizukuStatus.START_FAILED -> if (state.suspectedRomBug) {
@@ -143,7 +143,7 @@ class MainActivity : AppCompatActivity() {
             ShizukuStatus.PERMISSION_REQUIRED -> R.string.shizuku_action_grant
             ShizukuStatus.PERMISSION_DENIED -> R.string.shizuku_action_manage
             ShizukuStatus.CONNECTED -> when (state.mode) {
-                ReaderMode.BINDER -> R.string.shizuku_action_retry_service
+                ReaderMode.SHELL -> R.string.shizuku_action_retry_service
                 ReaderMode.USER_SERVICE -> R.string.shizuku_action_manage
             }
             ShizukuStatus.START_FAILED -> R.string.shizuku_action_retry

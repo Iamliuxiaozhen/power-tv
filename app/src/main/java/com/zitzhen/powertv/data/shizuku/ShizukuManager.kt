@@ -48,11 +48,11 @@ enum class ReaderMode {
     USER_SERVICE,
 
     /**
-     * Calls ActivityManager directly over a Shizuku-wrapped binder. Spawns no
-     * child process, so it survives ROMs where user services crash; per-process
-     * CPU usage is unavailable in this mode.
+     * Spawns a shell through the Shizuku server (`Shizuku.newProcess`). No
+     * user service is started, so it survives ROMs where user services crash
+     * during startup, and full /proc data including CPU ticks stays available.
      */
-    BINDER,
+    SHELL,
 }
 
 data class ShizukuState(
@@ -85,8 +85,8 @@ class ShizukuManager(private val context: Context) {
 
     @Volatile
     private var mode: ReaderMode =
-        if (prefs.getString(KEY_READER_MODE, null) == MODE_VALUE_BINDER) {
-            ReaderMode.BINDER
+        if (prefs.getString(KEY_READER_MODE, null) in SHELL_MODE_VALUES) {
+            ReaderMode.SHELL
         } else {
             ReaderMode.USER_SERVICE
         }
@@ -118,7 +118,7 @@ class ShizukuManager(private val context: Context) {
 
     private val connection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, binder: IBinder?) {
-            if (mode == ReaderMode.BINDER) {
+            if (mode == ReaderMode.SHELL) {
                 // The user switched to binder mode while this bind was in
                 // flight; drop the connection instead of adopting it.
                 binding = false
@@ -143,7 +143,7 @@ class ShizukuManager(private val context: Context) {
         }
 
         override fun onServiceDisconnected(name: ComponentName?) {
-            if (mode == ReaderMode.BINDER) return
+            if (mode == ReaderMode.SHELL) return
             cancelStartWatchdog()
             binding = false
             val wasConnected = reader != null
@@ -203,8 +203,8 @@ class ShizukuManager(private val context: Context) {
 
         if (reader != null) {
             publish(ShizukuStatus.CONNECTED)
-        } else if (mode == ReaderMode.BINDER) {
-            // Binder mode needs no service handshake; permission is enough.
+        } else if (mode == ReaderMode.SHELL) {
+            // Shell mode needs no service handshake; permission is enough.
             publish(ShizukuStatus.CONNECTED)
         } else if (!binding) {
             publish(ShizukuStatus.CONNECTING)
@@ -217,10 +217,11 @@ class ShizukuManager(private val context: Context) {
     }
 
     /**
-     * Switches to binder-direct basic mode and persists the choice, so devices
-     * where the user service can never start stay usable across restarts.
+     * Switches to the Shizuku-shell fallback and persists the choice, so
+     * devices where the user service can never start stay usable across
+     * restarts.
      */
-    fun useBinderFallback() {
+    fun useShellFallback() {
         cancelStartWatchdog()
         if (binding || reader != null) {
             runCatching {
@@ -229,8 +230,8 @@ class ShizukuManager(private val context: Context) {
             binding = false
             reader = null
         }
-        mode = ReaderMode.BINDER
-        prefs.edit().putString(KEY_READER_MODE, MODE_VALUE_BINDER).apply()
+        mode = ReaderMode.SHELL
+        prefs.edit().putString(KEY_READER_MODE, MODE_VALUE_SHELL).apply()
         refresh()
     }
 
@@ -256,16 +257,20 @@ class ShizukuManager(private val context: Context) {
 
     /**
      * Returns the raw `/proc/stat` contents, or null when Shizuku is not ready.
-     * Always null in binder mode: the binder API cannot read files, so the CPU
-     * sampler falls back to whatever the app itself can read.
+     * Shell mode reads it through a short-lived shell spawned by Shizuku, so
+     * system CPU totals stay available there as well.
      */
     fun readCpuStat(): String? =
-        if (mode == ReaderMode.BINDER) null else read { it.readCpuStat() }
+        if (mode == ReaderMode.SHELL) {
+            ShizukuShellProcReader.readCpuStat()
+        } else {
+            read { it.readCpuStat() }
+        }
 
     /** Returns the encoded process table, or null when Shizuku is not ready. */
     fun readProcessTable(): String? =
-        if (mode == ReaderMode.BINDER) {
-            ActivityManagerProcessReader.readProcessTable()
+        if (mode == ReaderMode.SHELL) {
+            ShizukuShellProcReader.readProcessTable()
         } else {
             read { it.readProcessTable() }
         }
@@ -384,6 +389,9 @@ class ShizukuManager(private val context: Context) {
         const val START_TIMEOUT_MS = 8_000L
         const val PREFS_NAME = "powertv"
         const val KEY_READER_MODE = "shizuku_reader_mode"
-        const val MODE_VALUE_BINDER = "binder"
+        const val MODE_VALUE_SHELL = "shell"
+
+        /** "binder" was written by an earlier build and means the same mode. */
+        val SHELL_MODE_VALUES = setOf(MODE_VALUE_SHELL, "binder")
     }
 }
