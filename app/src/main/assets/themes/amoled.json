@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "builtin.amoled",
+  "name": {
+    "en": "AMOLED",
+    "zh-CN": "纯黑",
+    "zh-TW": "純黑",
+    "zh-HK": "純黑"
+  },
+  "author": "power-tv",
+  "version": "1.0.0",
+  "description": {
+    "en": "Pure black surfaces for OLED panels.",
+    "zh-CN": "适合 OLED 屏幕的纯黑界面。",
+    "zh-TW": "適合 OLED 螢幕的純黑介面。",
+    "zh-HK": "適合 OLED 螢幕的純黑介面。"
+  },
+  "schemes": {
+    "light": {
+      "primary": "#7BD8C6",
+      "onPrimary": "#003731",
+      "primaryContainer": "#00504A",
+      "onPrimaryContainer": "#9FF2EE",
+      "secondary": "#9FCAC5",
+      "onSecondary": "#0A3531",
+      "secondaryContainer": "#244C47",
+      "onSecondaryContainer": "#BBE9E4",
+      "tertiary": "#B3C8E8",
+      "onTertiary": "#1C314B",
+      "tertiaryContainer": "#2C415C",
+      "onTertiaryContainer": "#D3E4FF",
+      "error": "#FFB4AB",
+      "onError": "#690005",
+      "errorContainer": "#93000A",
+      "onErrorContainer": "#FFDAD6",
+      "background": "#000000",
+      "onBackground": "#E3E9E7",
+      "surface": "#000000",
+      "onSurface": "#E3E9E7",
+      "surfaceVariant": "#232B29",
+      "onSurfaceVariant": "#BEC9C6",
+      "outline": "#889390",
+      "outlineVariant": "#3C4643",
+      "surfaceContainerLowest": "#000000",
+      "surfaceContainerLow": "#090E0D",
+      "surfaceContainer": "#101615",
+      "surfaceContainerHigh": "#1A201F",
+      "surfaceContainerHighest": "#252C2A"
+    },
+    "dark": {
+      "primary": "#7BD8C6",
+      "onPrimary": "#003731",
+      "primaryContainer": "#00504A",
+      "onPrimaryContainer": "#9FF2EE",
+      "secondary": "#9FCAC5",
+      "onSecondary": "#0A3531",
+      "secondaryContainer": "#244C47",
+      "onSecondaryContainer": "#BBE9E4",
+      "tertiary": "#B3C8E8",
+      "onTertiary": "#1C314B",
+      "tertiaryContainer": "#2C415C",
+      "onTertiaryContainer": "#D3E4FF",
+      "error": "#FFB4AB",
+      "onError": "#690005",
+      "errorContainer": "#93000A",
+      "onErrorContainer": "#FFDAD6",
+      "background": "#000000",
+      "onBackground": "#E3E9E7",
+      "surface": "#000000",
+      "onSurface": "#E3E9E7",
+      "surfaceVariant": "#232B29",
+      "onSurfaceVariant": "#BEC9C6",
+      "outline": "#889390",
+      "outlineVariant": "#3C4643",
+      "surfaceContainerLowest": "#000000",
+      "surfaceContainerLow": "#090E0D",
+      "surfaceContainer": "#101615",
+      "surfaceContainerHigh": "#1A201F",
+      "surfaceContainerHighest": "#252C2A"
+    }
+  },
+  "dataViz": {
+    "light": {
+      "loadLow": "#7BD8C6",
+      "loadMedium": "#FFC857",
+      "loadHigh": "#FF8A80",
+      "chartGrid": "#337BD8C6",
+      "chartFill": "#557BD8C6",
+      "liveDot": "#7BD8C6"
+    },
+    "dark": {
+      "loadLow": "#7BD8C6",
+      "loadMedium": "#FFC857",
+      "loadHigh": "#FF8A80",
+      "chartGrid": "#337BD8C6",
+      "chartFill": "#557BD8C6",
+      "liveDot": "#7BD8C6"
+    }
+  }
+}

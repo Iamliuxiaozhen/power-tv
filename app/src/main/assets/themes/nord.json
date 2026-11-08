@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "builtin.nord",
+  "name": {
+    "en": "Nord",
+    "zh-CN": "北境",
+    "zh-TW": "北境",
+    "zh-HK": "北境"
+  },
+  "author": "power-tv",
+  "version": "1.0.0",
+  "description": {
+    "en": "Cool arctic blues inspired by the Nord palette.",
+    "zh-CN": "来自 Nord 配色的冷色北境蓝。",
+    "zh-TW": "來自 Nord 配色的冷色北境藍。",
+    "zh-HK": "來自 Nord 配色的冷色北境藍。"
+  },
+  "schemes": {
+    "light": {
+      "primary": "#4C7A8A",
+      "onPrimary": "#FFFFFF",
+      "primaryContainer": "#C7E3EC",
+      "onPrimaryContainer": "#0E2A33",
+      "secondary": "#5B6B78",
+      "onSecondary": "#FFFFFF",
+      "secondaryContainer": "#D8E1E8",
+      "onSecondaryContainer": "#16242C",
+      "tertiary": "#7D5F78",
+      "onTertiary": "#FFFFFF",
+      "tertiaryContainer": "#EBD6E8",
+      "onTertiaryContainer": "#2F1B2C",
+      "error": "#BA1A1A",
+      "onError": "#FFFFFF",
+      "errorContainer": "#FFDAD6",
+      "onErrorContainer": "#410002",
+      "background": "#ECEFF4",
+      "onBackground": "#2E3440",
+      "surface": "#ECEFF4",
+      "onSurface": "#2E3440",
+      "surfaceVariant": "#DCE3EA",
+      "onSurfaceVariant": "#4A5562",
+      "outline": "#6F7B88",
+      "outlineVariant": "#C1CAD4",
+      "surfaceContainerLowest": "#F8FAFC",
+      "surfaceContainerLow": "#F2F5F9",
+      "surfaceContainer": "#E9EDF2",
+      "surfaceContainerHigh": "#E3E8EE",
+      "surfaceContainerHighest": "#D7DEE6"
+    },
+    "dark": {
+      "primary": "#88C0D0",
+      "onPrimary": "#16323A",
+      "primaryContainer": "#3B5360",
+      "onPrimaryContainer": "#D8EEF5",
+      "secondary": "#A3B8C2",
+      "onSecondary": "#1F3038",
+      "secondaryContainer": "#3B4A54",
+      "onSecondaryContainer": "#D7E6EE",
+      "tertiary": "#C79BC0",
+      "onTertiary": "#3B2238",
+      "tertiaryContainer": "#4E3B4A",
+      "onTertiaryContainer": "#F0D7EA",
+      "error": "#BF616A",
+      "onError": "#3B0A0D",
+      "errorContainer": "#5A2A30",
+      "onErrorContainer": "#FFDAD6",
+      "background": "#2E3440",
+      "onBackground": "#ECEFF4",
+      "surface": "#2E3440",
+      "onSurface": "#ECEFF4",
+      "surfaceVariant": "#3B4252",
+      "onSurfaceVariant": "#C7D0DA",
+      "outline": "#8A97A6",
+      "outlineVariant": "#4C566A",
+      "surfaceContainerLowest": "#242933",
+      "surfaceContainerLow": "#2A303B",
+      "surfaceContainer": "#333A46",
+      "surfaceContainerHigh": "#3B4351",
+      "surfaceContainerHighest": "#434C5E"
+    }
+  },
+  "dataViz": {
+    "light": {
+      "loadLow": "#4C7A8A",
+      "loadMedium": "#B26A00",
+      "loadHigh": "#BA1A1A",
+      "chartGrid": "#1A4C7A8A",
+      "chartFill": "#554C7A8A",
+      "liveDot": "#4C7A8A"
+    },
+    "dark": {
+      "loadLow": "#88C0D0",
+      "loadMedium": "#EBCB8B",
+      "loadHigh": "#BF616A",
+      "chartGrid": "#3388C0D0",
+      "chartFill": "#5588C0D0",
+      "liveDot": "#88C0D0"
+    }
+  }
+}
