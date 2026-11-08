@@ -36,6 +36,47 @@
             android:name=".ui.SettingsActivity"
             android:exported="false"
             android:label="@string/settings_title" />
+
+        <activity
+            android:name=".ui.theme.ThemeActivity"
+            android:exported="true"
+            android:label="@string/theme_title"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="content"
+                    android:mimeType="application/vnd.powertv.theme+zip" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="application/vnd.powertv.theme+zip" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="*"
+                    android:pathPattern=".*\.ptheme"
+                    android:scheme="content" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.theme.ThemeEditorActivity"
+            android:exported="false"
+            android:label="@string/theme_editor_title"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

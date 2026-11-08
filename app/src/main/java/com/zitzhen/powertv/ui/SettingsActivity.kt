@@ -1,5 +1,6 @@
 package com.zitzhen.powertv.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +16,7 @@ import com.zitzhen.powertv.data.settings.DashboardModule
 import com.zitzhen.powertv.data.settings.ModuleSettingsRepository
 import com.zitzhen.powertv.data.theme.ResolvedTheme
 import com.zitzhen.powertv.databinding.ActivitySettingsBinding
+import com.zitzhen.powertv.ui.theme.ThemeActivity
 import com.zitzhen.powertv.ui.theme.ThemeApplier
 
 class SettingsActivity : AppCompatActivity() {
@@ -49,6 +51,11 @@ class SettingsActivity : AppCompatActivity() {
         }
         binding.toolbar.setNavigationOnClickListener { finish() }
         ThemeApplier.apply(this, theme)
+
+        binding.themeSummary.text = getString(R.string.settings_theme_summary, theme.pack.name())
+        binding.themeCard.setOnClickListener {
+            startActivity(Intent(this, ThemeActivity::class.java))
+        }
 
         adapter = ModuleAdapter(
             items = order,
