@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "builtin.teal",
+  "name": {
+    "en": "Teal",
+    "zh-CN": "青绿",
+    "zh-TW": "青綠",
+    "zh-HK": "青綠"
+  },
+  "author": "power-tv",
+  "version": "1.0.0",
+  "description": {
+    "en": "The default teal palette.",
+    "zh-CN": "默认青绿配色。",
+    "zh-TW": "預設青綠配色。",
+    "zh-HK": "預設青綠配色。"
+  },
+  "schemes": {
+    "light": {
+      "primary": "#006A67",
+      "onPrimary": "#FFFFFF",
+      "primaryContainer": "#9FF2EE",
+      "onPrimaryContainer": "#00201F",
+      "secondary": "#4A6361",
+      "onSecondary": "#FFFFFF",
+      "secondaryContainer": "#CCE8E5",
+      "onSecondaryContainer": "#051F1E",
+      "tertiary": "#4B607C",
+      "onTertiary": "#FFFFFF",
+      "tertiaryContainer": "#D3E4FF",
+      "onTertiaryContainer": "#041C35",
+      "error": "#BA1A1A",
+      "onError": "#FFFFFF",
+      "errorContainer": "#FFDAD6",
+      "onErrorContainer": "#410002",
+      "background": "#F5FAF9",
+      "onBackground": "#171D1C",
+      "surface": "#F5FAF9",
+      "onSurface": "#171D1C",
+      "surfaceVariant": "#DAE5E3",
+      "onSurfaceVariant": "#3F4948",
+      "outline": "#6F7978",
+      "outlineVariant": "#BEC9C7",
+      "surfaceContainerLowest": "#FFFFFF",
+      "surfaceContainerLow": "#EFF5F4",
+      "surfaceContainer": "#E9EFEE",
+      "surfaceContainerHigh": "#E3E9E8",
+      "surfaceContainerHighest": "#DDE4E2"
+    },
+    "dark": {
+      "primary": "#82D5D1",
+      "onPrimary": "#003735",
+      "primaryContainer": "#00504E",
+      "onPrimaryContainer": "#9FF2EE",
+      "secondary": "#B1CCC9",
+      "onSecondary": "#1C3533",
+      "secondaryContainer": "#334B49",
+      "onSecondaryContainer": "#CCE8E5",
+      "tertiary": "#B3C8E8",
+      "onTertiary": "#1C314B",
+      "tertiaryContainer": "#334863",
+      "onTertiaryContainer": "#D3E4FF",
+      "error": "#FFB4AB",
+      "onError": "#690005",
+      "errorContainer": "#93000A",
+      "onErrorContainer": "#FFDAD6",
+      "background": "#0E1514",
+      "onBackground": "#DDE4E2",
+      "surface": "#0E1514",
+      "onSurface": "#DDE4E2",
+      "surfaceVariant": "#3F4948",
+      "onSurfaceVariant": "#BEC9C7",
+      "outline": "#899392",
+      "outlineVariant": "#3F4948",
+      "surfaceContainerLowest": "#090F0F",
+      "surfaceContainerLow": "#171D1D",
+      "surfaceContainer": "#1B2120",
+      "surfaceContainerHigh": "#252B2A",
+      "surfaceContainerHighest": "#303635"
+    }
+  },
+  "dataViz": {
+    "light": {
+      "loadLow": "#1F7A66",
+      "loadMedium": "#B26A00",
+      "loadHigh": "#BA1A1A",
+      "chartGrid": "#1A006A67",
+      "chartFill": "#55006A67",
+      "liveDot": "#1F7A66"
+    },
+    "dark": {
+      "loadLow": "#7BD8C6",
+      "loadMedium": "#FFC857",
+      "loadHigh": "#FF8A80",
+      "chartGrid": "#3382D5D1",
+      "chartFill": "#5582D5D1",
+      "liveDot": "#7BD8C6"
+    }
+  }
+}
