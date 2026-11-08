@@ -1,19 +1,14 @@
 package com.zitzhen.powertv.ui
 
-import android.content.Context
-import androidx.core.content.ContextCompat
-import com.zitzhen.powertv.R
+import com.zitzhen.powertv.data.theme.ResolvedTheme
 
 /** Shared load-to-colour mapping for bars, charts and pills. */
 object LoadPalette {
 
-    fun color(context: Context, percent: Float?): Int {
-        val res = when {
-            percent == null -> R.color.load_low
-            percent >= 85f -> R.color.load_high
-            percent >= 60f -> R.color.load_medium
-            else -> R.color.load_low
-        }
-        return ContextCompat.getColor(context, res)
+    fun color(theme: ResolvedTheme, percent: Float?): Int = when {
+        percent == null -> theme.dataViz.loadLow
+        percent >= 85f -> theme.dataViz.loadHigh
+        percent >= 60f -> theme.dataViz.loadMedium
+        else -> theme.dataViz.loadLow
     }
 }

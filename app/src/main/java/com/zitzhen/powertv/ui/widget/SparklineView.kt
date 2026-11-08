@@ -27,9 +27,9 @@ class SparklineView @JvmOverloads constructor(
     private var values: List<Float> = emptyList()
     private var maxValue: Float = 100f
 
-    private val lineColor = MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimary)
-    private val gridColor = ContextCompat.getColor(context, R.color.chart_grid)
-    private val fillColor = ContextCompat.getColor(context, R.color.chart_fill)
+    private var lineColor = MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimary)
+    private var gridColor = ContextCompat.getColor(context, R.color.chart_grid)
+    private var fillColor = ContextCompat.getColor(context, R.color.chart_fill)
 
     private val linePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -59,6 +59,19 @@ class SparklineView @JvmOverloads constructor(
     private val linePath = Path()
     private val fillPath = Path()
 
+    fun applyPalette(line: Int, grid: Int, fill: Int) {
+        lineColor = line
+        gridColor = grid
+        fillColor = fill
+        linePaint.color = line
+        dotPaint.color = line
+        haloPaint.color = ColorUtils.setAlphaComponent(line, 56)
+        gridPaint.color = grid
+        fillPaint.color = fill
+        updateFillShader()
+        invalidate()
+    }
+
     fun setValues(newValues: List<Float>, newMaxValue: Float = 100f) {
         values = newValues.takeLast(WINDOW)
         maxValue = newMaxValue.coerceAtLeast(1f)
@@ -68,14 +81,19 @@ class SparklineView @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        updateFillShader()
+    }
+
+    private fun updateFillShader() {
+        if (width <= 0 || height <= 0) return
         val top = dp(4f)
-        val bottom = h - dp(4f)
+        val bottom = height - dp(4f)
         fillPaint.shader = LinearGradient(
             0f,
             top,
             0f,
             bottom,
-            ColorUtils.setAlphaComponent(lineColor, 96),
+            fillColor,
             Color.TRANSPARENT,
             Shader.TileMode.CLAMP,
         )

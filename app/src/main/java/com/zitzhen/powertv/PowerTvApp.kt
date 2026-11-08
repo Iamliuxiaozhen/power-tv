@@ -3,6 +3,7 @@ package com.zitzhen.powertv
 import android.app.Application
 import com.zitzhen.powertv.data.settings.ModuleSettingsRepository
 import com.zitzhen.powertv.data.shizuku.ShizukuManager
+import com.zitzhen.powertv.data.theme.ThemeRepository
 
 /**
  * Owns the process-wide Shizuku connection so the privileged reader survives
@@ -11,6 +12,7 @@ import com.zitzhen.powertv.data.shizuku.ShizukuManager
 class PowerTvApp : Application() {
     val shizuku: ShizukuManager by lazy { ShizukuManager(this) }
     val moduleSettings: ModuleSettingsRepository by lazy { ModuleSettingsRepository(this) }
+    val themes: ThemeRepository by lazy { ThemeRepository(this) }
 
     override fun onCreate() {
         super.onCreate()

@@ -51,6 +51,7 @@
 
                 <TextView
                     android:id="@+id/process_own_badge"
+                    android:tag="powertv_pill_primary"
                     style="@style/Widget.Powertv.Pill.Primary"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

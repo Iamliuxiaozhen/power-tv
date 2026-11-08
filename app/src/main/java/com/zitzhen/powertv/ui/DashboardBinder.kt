@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.google.android.material.color.MaterialColors
 import com.zitzhen.powertv.R
 import com.zitzhen.powertv.data.model.BatteryState
 import com.zitzhen.powertv.data.model.SystemSnapshot
@@ -14,20 +13,25 @@ import com.zitzhen.powertv.data.model.TemperatureKind
 import com.zitzhen.powertv.data.model.TemperatureReading
 import com.zitzhen.powertv.data.model.ThermalStatus
 import com.zitzhen.powertv.data.settings.DashboardModule
+import com.zitzhen.powertv.data.theme.ResolvedTheme
 import com.zitzhen.powertv.databinding.ItemCoreBinding
 import com.zitzhen.powertv.databinding.ItemInfoRowBinding
 import com.zitzhen.powertv.databinding.ScreenDashboardBinding
+import com.zitzhen.powertv.ui.theme.PillTone
+import com.zitzhen.powertv.ui.theme.ThemeApplier
 import kotlin.math.roundToInt
 
 /** Binds [MonitorUiState] to the dashboard's Material 3 cards. */
-class DashboardBinder(private val binding: ScreenDashboardBinding) {
-
-    private enum class PillTone { NEUTRAL, PRIMARY, WARNING }
+class DashboardBinder(
+    private val binding: ScreenDashboardBinding,
+    private val theme: ResolvedTheme,
+) {
 
     private data class CoreCell(val root: View, val binding: ItemCoreBinding)
 
     private val context = binding.root.context
     private val inflater = LayoutInflater.from(context)
+    private val styler = ThemeApplier.styler(context, theme)
     private var coreCells: List<CoreCell> = emptyList()
     private var deviceRows: List<ItemInfoRowBinding> = emptyList()
     private var appliedOrder: List<DashboardModule>? = null
@@ -175,7 +179,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
             }
             val progress = core.usagePercent?.roundToInt()?.coerceIn(0, 100) ?: 0
             cell.binding.coreProgress.setProgressCompat(progress, false)
-            cell.binding.coreProgress.setIndicatorColor(LoadPalette.color(context, core.usagePercent))
+            cell.binding.coreProgress.setIndicatorColor(LoadPalette.color(theme, core.usagePercent))
             cell.root.alpha = if (core.online) 1f else 0.45f
         }
     }
@@ -199,6 +203,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
             }
             val cellBinding = ItemCoreBinding.inflate(inflater, row, false)
             val cellView = cellBinding.root
+            styler.apply(cellView)
             row?.addView(
                 cellView,
                 LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f),
@@ -268,6 +273,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
             val row = ItemInfoRowBinding.inflate(inflater, binding.thermalSensors, false)
             row.infoLabel.text = temperatureLabel(reading)
             row.infoValue.text = Formatters.temperature(reading.celsius)
+            styler.apply(row.root)
             binding.thermalSensors.addView(row.root)
         }
     }
@@ -281,7 +287,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
             Formatters.bytes(memory.totalBytes),
         )
         binding.memoryProgress.setProgressCompat(memory.usedPercent.roundToInt(), false)
-        binding.memoryProgress.setIndicatorColor(LoadPalette.color(context, memory.usedPercent))
+        binding.memoryProgress.setIndicatorColor(LoadPalette.color(theme, memory.usedPercent))
         binding.memoryCached.text = Formatters.bytes(memory.cachedBytes)
         binding.memoryAvailable.text = Formatters.bytes(memory.availableBytes)
         binding.memorySwap.text = context.getString(
@@ -318,6 +324,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
         if (deviceRows.isEmpty()) {
             deviceRows = List(6) {
                 ItemInfoRowBinding.inflate(inflater, binding.deviceRows, false).also { row ->
+                    styler.apply(row.root)
                     binding.deviceRows.addView(row.root)
                 }
             }
@@ -346,18 +353,7 @@ class DashboardBinder(private val binding: ScreenDashboardBinding) {
     }
 
     private fun applyPill(view: TextView, tone: PillTone) {
-        val background = when (tone) {
-            PillTone.NEUTRAL -> R.drawable.bg_pill_surface
-            PillTone.PRIMARY -> R.drawable.bg_pill_primary
-            PillTone.WARNING -> R.drawable.bg_pill_warning
-        }
-        val textColorAttr = when (tone) {
-            PillTone.NEUTRAL -> com.google.android.material.R.attr.colorOnSurfaceVariant
-            PillTone.PRIMARY -> com.google.android.material.R.attr.colorOnPrimaryContainer
-            PillTone.WARNING -> com.google.android.material.R.attr.colorOnErrorContainer
-        }
-        view.setBackgroundResource(background)
-        view.setTextColor(MaterialColors.getColor(view, textColorAttr))
+        ThemeApplier.applyPill(view, theme, tone)
     }
 
     private fun deviceDisplayName(snapshot: SystemSnapshot): String {

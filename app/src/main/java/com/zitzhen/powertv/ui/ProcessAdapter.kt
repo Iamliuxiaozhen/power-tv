@@ -8,9 +8,15 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.zitzhen.powertv.R
 import com.zitzhen.powertv.data.model.ProcessInfo
+import com.zitzhen.powertv.data.theme.ResolvedTheme
 import com.zitzhen.powertv.databinding.ItemProcessBinding
+import com.zitzhen.powertv.ui.theme.ThemeApplier
 
-class ProcessAdapter : ListAdapter<ProcessInfo, ProcessAdapter.ProcessViewHolder>(DIFF) {
+class ProcessAdapter(
+    private val theme: ResolvedTheme,
+) : ListAdapter<ProcessInfo, ProcessAdapter.ProcessViewHolder>(DIFF) {
+
+    private var styler: ThemeApplier.Styler? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProcessViewHolder {
         val binding = ItemProcessBinding.inflate(
@@ -18,6 +24,8 @@ class ProcessAdapter : ListAdapter<ProcessInfo, ProcessAdapter.ProcessViewHolder
             parent,
             false,
         )
+        val viewStyler = styler ?: ThemeApplier.styler(parent.context, theme).also { styler = it }
+        viewStyler.apply(binding.root)
         return ProcessViewHolder(binding)
     }
 
@@ -25,7 +33,7 @@ class ProcessAdapter : ListAdapter<ProcessInfo, ProcessAdapter.ProcessViewHolder
         holder.bind(getItem(position))
     }
 
-    class ProcessViewHolder(
+    inner class ProcessViewHolder(
         private val binding: ItemProcessBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -48,7 +56,7 @@ class ProcessAdapter : ListAdapter<ProcessInfo, ProcessAdapter.ProcessViewHolder
                 R.string.process_cpu,
                 Formatters.percent(process.cpuPercent, decimals = 1),
             )
-            binding.processCpu.setTextColor(LoadPalette.color(context, process.cpuPercent))
+            binding.processCpu.setTextColor(LoadPalette.color(theme, process.cpuPercent))
             binding.processOwnBadge.isVisible = process.isOwnProcess
         }
     }

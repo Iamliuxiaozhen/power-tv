@@ -77,6 +77,7 @@
 
                 <TextView
                     android:id="@+id/hero_model"
+                    android:tag="powertv_metric"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -97,6 +98,7 @@
 
                 <TextView
                     android:id="@+id/hero_timestamp"
+                    android:tag="powertv_mono"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
@@ -168,6 +170,7 @@
 
                     <TextView
                         android:id="@+id/cpu_value"
+                        android:tag="powertv_metric"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.Powertv.Metric"
@@ -196,6 +199,7 @@
 
                     <TextView
                         android:id="@+id/cpu_freq"
+                        android:tag="powertv_mono"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.Powertv.Mono"
@@ -277,6 +281,7 @@
 
                             <TextView
                                 android:id="@+id/gpu_source_pill"
+                                android:tag="powertv_pill_surface"
                                 style="@style/Widget.Powertv.Pill"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -309,6 +314,7 @@
 
                         <TextView
                             android:id="@+id/gpu_value"
+                            android:tag="powertv_metric"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAppearance="@style/TextAppearance.Powertv.Metric"
@@ -316,6 +322,7 @@
 
                         <TextView
                             android:id="@+id/gpu_max_freq"
+                            android:tag="powertv_mono"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="end"
@@ -396,6 +403,7 @@
 
                             <TextView
                                 android:id="@+id/thermal_status_pill"
+                                android:tag="powertv_pill_primary"
                                 style="@style/Widget.Powertv.Pill.Primary"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -420,6 +428,7 @@
 
                     <TextView
                         android:id="@+id/thermal_value"
+                        android:tag="powertv_metric"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.Powertv.Metric"
@@ -501,6 +510,7 @@
 
                     <TextView
                         android:id="@+id/memory_percent"
+                        android:tag="powertv_metric"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.Powertv.Metric"
@@ -659,6 +669,7 @@
 
                             <TextView
                                 android:id="@+id/battery_state_pill"
+                                android:tag="powertv_pill_surface"
                                 style="@style/Widget.Powertv.Pill"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -681,6 +692,7 @@
 
                     <TextView
                         android:id="@+id/battery_value"
+                        android:tag="powertv_metric"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.Powertv.Metric"
