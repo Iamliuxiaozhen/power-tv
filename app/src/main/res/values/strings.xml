@@ -163,6 +163,7 @@
     <string name="theme_editor_title">New theme</string>
     <string name="theme_name_required">Enter a theme name</string>
     <string name="theme_saved">Saved “%1$s”</string>
+    <string name="theme_save_failed">Could not save: %1$s</string>
     <string name="theme_preview_caption">Sample preview — your live data is unaffected.</string>
     <string name="theme_preview_device">Pixel 10a</string>
     <string name="color_hex">Hex colour</string>

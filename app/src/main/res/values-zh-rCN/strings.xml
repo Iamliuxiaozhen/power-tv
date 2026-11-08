@@ -167,4 +167,5 @@
     <string name="color_saturation">饱和度</string>
     <string name="color_lightness">明度</string>
     <string name="color_invalid">请使用 #RGB、#RRGGBB 或 #AARRGGBB</string>
+    <string name="theme_save_failed">保存失败：%1$s</string>
 </resources>

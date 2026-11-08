@@ -113,7 +113,7 @@ class ThemeEditorActivity : AppCompatActivity() {
         } catch (error: Exception) {
             val dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.theme_title)
-                .setMessage(error.message ?: getString(R.string.theme_import_failed, "unknown"))
+                .setMessage(getString(R.string.theme_save_failed, error.message ?: "unknown"))
                 .setPositiveButton(R.string.about_ok, null)
                 .create()
             dialog.setOnShowListener { ThemeApplier.applyDialog(dialog, theme) }
