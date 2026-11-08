@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "id": "user.midnight-forest",
+  "name": {
+    "en": "Midnight Forest",
+    "zh-CN": "午夜森林"
+  },
+  "author": "power-tv",
+  "version": "1.0.0",
+  "seed": "#2E6B4F",
+  "schemes": {
+    "light": {
+      "primary": "#2E6B4F",
+      "onPrimary": "#FFFFFF",
+      "primaryContainer": "#B4F1CE",
+      "onPrimaryContainer": "#00210F",
+      "secondary": "#4E6357",
+      "onSecondary": "#FFFFFF",
+      "secondaryContainer": "#D0E8D9",
+      "onSecondaryContainer": "#0B1F15",
+      "tertiary": "#3D6373",
+      "onTertiary": "#FFFFFF",
+      "tertiaryContainer": "#C1E8FB",
+      "onTertiaryContainer": "#001F29",
+      "error": "#BA1A1A",
+      "onError": "#FFFFFF",
+      "errorContainer": "#FFDAD6",
+      "onErrorContainer": "#410002",
+      "background": "#F6FBF5",
+      "onBackground": "#181D18",
+      "surface": "#F6FBF5",
+      "onSurface": "#181D18",
+      "surfaceVariant": "#DBE5DB",
+      "onSurfaceVariant": "#404940",
+      "outline": "#707970",
+      "outlineVariant": "#BFC9BF",
+      "surfaceContainerLowest": "#FFFFFF",
+      "surfaceContainerLow": "#F0F5EF",
+      "surfaceContainer": "#EAEFE9",
+      "surfaceContainerHigh": "#E4EAE3",
+      "surfaceContainerHighest": "#DFE4DD"
+    },
+    "dark": {
+      "primary": "#8BD5B0",
+      "onPrimary": "#00391F",
+      "primaryContainer": "#115232",
+      "onPrimaryContainer": "#A7F2C8",
+      "secondary": "#B4CCBC",
+      "onSecondary": "#20352A",
+      "secondaryContainer": "#364B3F",
+      "onSecondaryContainer": "#D0E8D9",
+      "tertiary": "#A5CCDF",
+      "onTertiary": "#073544",
+      "tertiaryContainer": "#244C5B",
+      "onTertiaryContainer": "#C1E8FB",
+      "error": "#FFB4AB",
+      "onError": "#690005",
+      "errorContainer": "#93000A",
+      "onErrorContainer": "#FFDAD6",
+      "background": "#0E1512",
+      "onBackground": "#DDE5DE",
+      "surface": "#0E1512",
+      "onSurface": "#DDE5DE",
+      "surfaceVariant": "#404940",
+      "onSurfaceVariant": "#BFC9BF",
+      "outline": "#8A938A",
+      "outlineVariant": "#404940",
+      "surfaceContainerLowest": "#090F0C",
+      "surfaceContainerLow": "#171D19",
+      "surfaceContainer": "#1B211D",
+      "surfaceContainerHigh": "#252B27",
+      "surfaceContainerHighest": "#303632"
+    }
+  },
+  "dataViz": {
+    "light": {
+      "loadLow": "#2E6B4F",
+      "loadMedium": "#B26A00",
+      "loadHigh": "#BA1A1A",
+      "chartGrid": "#1A2E6B4F",
+      "chartFill": "#552E6B4F",
+      "liveDot": "#2E6B4F"
+    },
+    "dark": {
+      "loadLow": "#8BD5B0",
+      "loadMedium": "#FFC857",
+      "loadHigh": "#FF8A80",
+      "chartGrid": "#338BD5B0",
+      "chartFill": "#558BD5B0",
+      "liveDot": "#8BD5B0"
+    }
+  },
+  "shape": {
+    "cardRadiusDp": 24
+  },
+  "layout": {
+    "order": ["hero", "cpu", "memory", "thermal", "gpu", "battery", "device"],
+    "visible": ["hero", "cpu", "memory", "thermal"]
+  }
+}

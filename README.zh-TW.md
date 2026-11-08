@@ -33,6 +33,7 @@
 - **裝置**：廠商/型號、Android 版本、硬體、ABI、運作時間與線上核心數。
 - **Shizuku（選用）**：使用者授權後，透過 ADB shell 讀取系統 CPU 統計與完整程序清單；未授權時自動退回一般讀取。
 - **介面**：Material 3、淺色/深色主題、英文、簡體中文與繁體中文（香港/台灣）。
+- **主題包**：內建青綠、純黑與北境配色；可從一種顏色建立主題，匯入/匯出 `.ptheme`/`.json`，並可選套用儀表板版面配置。主題包是純資料。詳見[主題包格式](docs/theme-packs.md)。
 - **隱私**：所有資料只在本機處理；應用程式未宣告 `INTERNET` 權限。
 
 ## 環境需求
@@ -65,6 +66,12 @@ Shizuku 不會隨應用程式打包，只有在你主動授權後才會使用。
 
 連線後，應用程式會透過執行於 ADB shell 的使用者服務讀取 `/proc/stat` 與程序資料。未連線時，介面會說明系統 CPU 使用率或程序清單無法取得的原因，而不是顯示推測值。
 
+## 主題包
+
+主題包入口在「設定 → 主題包」。一個主題包是宣告式的 `theme.json`（可連同 `assets/` 圖片打包為 `.ptheme`），用於設定 Material 顏色角色、圖表強調色、字型、卡片圓角、背景和可選的儀表板版面配置。主題包不包含程式碼，透過系統檔案選擇器匯入，因此應用程式仍然不需要儲存或網路權限。
+
+內建主題可以直接匯出作為創作基準。完整格式、JSON Schema 和範例見 [docs/theme-packs.md](docs/theme-packs.md)。
+
 ## 資料來源與限制
 
 | 指標 | 資料來源 | 說明 |
@@ -85,8 +92,10 @@ app/src/main/java/com/zitzhen/powertv/
 ├── data/
 │   ├── model/                   # 不可變的遙測模型
 │   ├── proc/                    # /proc CPU、記憶體與程序取樣及解析
+│   ├── settings/                # 儀表板模組順序與顯示
 │   ├── shizuku/                 # AIDL 讀取服務與 Shizuku 生命週期
-│   └── system/                  # 電池、溫度、GPU、裝置資訊與聚合
+│   ├── system/                  # 電池、溫度、GPU、裝置資訊與聚合
+│   └── theme/                   # 主題包模型、JSON 編解碼、封存匯入與倉庫
 └── ui/
     ├── MonitorViewModel.kt      # 以 StateFlow 對外的每秒取樣迴圈
     ├── DashboardBinder.kt       # 概覽卡片與迷你折線圖
@@ -94,6 +103,7 @@ app/src/main/java/com/zitzhen/powertv/
     ├── ProcessBinder.kt         # 程序頁狀態與排序
     ├── Formatters.kt            # 單位與數值格式化
     ├── LoadPalette.kt           # 負載等級配色
+    ├── theme/                   # 主題套用、管理頁、編輯器與預覽
     └── widget/SparklineView.kt  # 自繪滾動折線圖
 ```
 
