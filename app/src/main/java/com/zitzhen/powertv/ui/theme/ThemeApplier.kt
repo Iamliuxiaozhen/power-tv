@@ -98,6 +98,9 @@ object ThemeApplier {
             toolbar.navigationIcon?.let { icon ->
                 DrawableCompat.setTint(icon.mutate(), theme[ThemeColor.ON_SURFACE_VARIANT])
             }
+            toolbar.overflowIcon?.let { icon ->
+                DrawableCompat.setTint(icon.mutate(), theme[ThemeColor.ON_SURFACE_VARIANT])
+            }
             val iconColor = ColorStateList.valueOf(theme[ThemeColor.ON_SURFACE_VARIANT])
             val menu = toolbar.menu
             for (index in 0 until menu.size()) {
