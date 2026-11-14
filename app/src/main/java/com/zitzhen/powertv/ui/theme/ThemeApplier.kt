@@ -53,6 +53,8 @@ object ThemeApplier {
     private const val TAG_NO_REMAP = "powertv_color_preview"
     private const val TAG_THEMED = "powertv_themed"
 
+    private val ENABLED_STATE = intArrayOf(android.R.attr.state_enabled)
+
     fun apply(activity: Activity, theme: ResolvedTheme) {
         applyWindow(activity, theme)
         applyChrome(activity, theme)
@@ -378,12 +380,13 @@ object ThemeApplier {
         }
 
         /**
-         * Only the default colour can be re-mapped: Android's public SDK does not
-         * expose the per-state colours of a [ColorStateList], so callers rebuild
-         * the states they care about (see [enabled]).
+         * Resolves the colour a view uses while enabled. Material selectors put
+         * their enabled colour under `state_enabled`, so [ColorStateList.getDefaultColor]
+         * would return the disabled fallback (onSurface at 12–38%) and make enabled
+         * controls look grey.
          */
         fun remap(colors: ColorStateList?): Int? =
-            colors?.let { map(it.defaultColor) }
+            colors?.let { map(it.getColorForState(ENABLED_STATE, it.defaultColor)) }
 
         fun enabled(color: Int): ColorStateList = ColorStateList(
             arrayOf(
