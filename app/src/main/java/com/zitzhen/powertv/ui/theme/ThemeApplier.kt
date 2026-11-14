@@ -377,6 +377,11 @@ object ThemeApplier {
             return (argb and 0xFF000000.toInt()) or (mapped and 0x00FFFFFF)
         }
 
+        /**
+         * Only the default colour can be re-mapped: Android's public SDK does not
+         * expose the per-state colours of a [ColorStateList], so callers rebuild
+         * the states they care about (see [enabled]).
+         */
         fun remap(colors: ColorStateList?): Int? =
             colors?.let { map(it.defaultColor) }
 
@@ -396,6 +401,13 @@ object ThemeApplier {
             intArrayOf(checked, normal),
         )
 
+        /**
+         * Records stock → theme mappings. Different roles can resolve to the same
+         * stock colour (this app's `colorBackground` and `colorSurface` are equal),
+         * and an inflated view cannot tell which attribute it used, so the last
+         * registration wins. [ThemeColor] declaration order therefore decides the
+         * alias, with surface-like roles intentionally coming last.
+         */
         private fun register(stock: Int, replacement: Int) {
             exact[stock] = replacement
             if (Color.alpha(stock) == 0xFF && Color.alpha(replacement) == 0xFF) {

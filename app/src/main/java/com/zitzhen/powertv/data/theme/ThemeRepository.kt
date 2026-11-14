@@ -88,6 +88,7 @@ class ThemeRepository(context: Context) {
         }
 
         val temporary = File(themesDir, ".tmp-${UUID.randomUUID()}")
+        val backup = File(themesDir, ".backup-${UUID.randomUUID()}")
         try {
             if (!temporary.mkdirs()) throw ThemePackException("unable to create theme storage")
             if (sourceDir != null && sourceDir.isDirectory) {
@@ -104,18 +105,28 @@ class ThemeRepository(context: Context) {
             val stored = pack.copy(builtIn = false, storageDir = destination)
             File(temporary, ThemePackCodec.THEME_FILE)
                 .writeText(ThemePackCodec.encode(stored), Charsets.UTF_8)
-            if (destination.exists() && !destination.deleteRecursively()) {
+            val hadPrevious = destination.exists()
+            if (hadPrevious && !destination.renameTo(backup)) {
                 throw ThemePackException("unable to replace the existing theme pack")
             }
             if (!temporary.renameTo(destination)) {
-                temporary.copyRecursively(destination, overwrite = true)
-                temporary.deleteRecursively()
+                throw ThemePackException("unable to store the theme pack")
             }
+            if (hadPrevious) backup.deleteRecursively()
             revision += 1
             return stored.copy(storageDir = destination)
         } catch (error: Exception) {
             temporary.deleteRecursively()
+            if (backup.exists()) restoreBackup(backup, destination)
             throw error
+        }
+    }
+
+    /** Best-effort recovery of the pack that was replaced by a failed install. */
+    private fun restoreBackup(backup: File, destination: File) {
+        if (destination.exists()) destination.deleteRecursively()
+        if (!backup.renameTo(destination)) {
+            runCatching { backup.copyRecursively(destination, overwrite = true) }
         }
     }
 

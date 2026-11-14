@@ -9,6 +9,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Files
+import java.util.zip.CRC32
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 
@@ -106,6 +107,80 @@ class ThemeArchiveTest {
                 "assets/payload.apk" to byteArrayOf(1),
             ),
         )
+
+        assertThrows(ThemePackException::class.java) {
+            ThemeArchive.read(ByteArrayInputStream(bytes), dir)
+        }
+    }
+
+    /** Writes a ZIP with two local entries sharing the same name (java.util.zip forbids this). */
+    private fun zipWithDuplicateEntries(name: String, bytes: ByteArray): ByteArray {
+        val output = ByteArrayOutputStream()
+        val central = ByteArrayOutputStream()
+        val entryName = name.toByteArray()
+        val crc = CRC32().apply { update(bytes) }.value.toInt()
+        repeat(2) {
+            val offset = output.size()
+            output.writeLe32(0x04034b50)
+            output.writeLe16(20)
+            output.writeLe16(0)
+            output.writeLe16(0)
+            output.writeLe16(0)
+            output.writeLe16(0)
+            output.writeLe32(crc)
+            output.writeLe32(bytes.size)
+            output.writeLe32(bytes.size)
+            output.writeLe16(entryName.size)
+            output.writeLe16(0)
+            output.write(entryName)
+            output.write(bytes)
+
+            central.writeLe32(0x02014b50)
+            central.writeLe16(20)
+            central.writeLe16(20)
+            central.writeLe16(0)
+            central.writeLe16(0)
+            central.writeLe16(0)
+            central.writeLe16(0)
+            central.writeLe32(crc)
+            central.writeLe32(bytes.size)
+            central.writeLe32(bytes.size)
+            central.writeLe16(entryName.size)
+            central.writeLe16(0)
+            central.writeLe16(0)
+            central.writeLe16(0)
+            central.writeLe16(0)
+            central.writeLe32(0)
+            central.writeLe32(offset)
+            central.write(entryName)
+        }
+        val centralOffset = output.size()
+        output.write(central.toByteArray())
+        output.writeLe32(0x06054b50)
+        output.writeLe16(0)
+        output.writeLe16(0)
+        output.writeLe16(2)
+        output.writeLe16(2)
+        output.writeLe32(central.size())
+        output.writeLe32(centralOffset)
+        output.writeLe16(0)
+        return output.toByteArray()
+    }
+
+    private fun ByteArrayOutputStream.writeLe16(value: Int) {
+        write(value and 0xFF)
+        write((value ushr 8) and 0xFF)
+    }
+
+    private fun ByteArrayOutputStream.writeLe32(value: Int) {
+        writeLe16(value and 0xFFFF)
+        writeLe16((value ushr 16) and 0xFFFF)
+    }
+
+    @Test
+    fun `rejects duplicate theme json entries`() {
+        val dir = tempDir()
+        val bytes = zipWithDuplicateEntries("theme.json", themeJson.toByteArray())
 
         assertThrows(ThemePackException::class.java) {
             ThemeArchive.read(ByteArrayInputStream(bytes), dir)

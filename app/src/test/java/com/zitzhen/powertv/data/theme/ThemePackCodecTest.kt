@@ -101,6 +101,28 @@ class ThemePackCodecTest {
     }
 
     @Test
+    fun `parses description, minAppVersion, typography and shape`() {
+        val json = minimal.replace(
+            "\"schemes\"",
+            """
+            "description": { "en": "Demo theme" },
+            "minAppVersion": "1.4.0",
+            "typography": { "metricFont": "serif", "monoFont": "monospace" },
+            "shape": { "cardRadiusDp": 18 },
+            "schemes"
+            """.trimIndent(),
+        )
+
+        val pack = ThemePackCodec.parse(json)
+
+        assertEquals("Demo theme", pack.description(Locale.ENGLISH))
+        assertEquals("1.4.0", pack.minAppVersion)
+        assertEquals("serif", pack.typography?.metricFont)
+        assertEquals("monospace", pack.typography?.monoFont)
+        assertEquals(18f, pack.shape?.cardRadiusDp ?: -1f, 0.01f)
+    }
+
+    @Test
     fun `rejects backdrop paths outside assets`() {
         val json = minimal.replace(
             "\"schemes\"",

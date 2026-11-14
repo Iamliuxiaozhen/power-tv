@@ -24,7 +24,7 @@ object ThemePackCodec {
     private const val MAX_AUTHOR_LENGTH = 64
     private const val MAX_DESCRIPTION_LENGTH = 512
     private const val MAX_LOCALES = 8
-    private const val MAX_LAYOUT_ENTRIES = 32
+    private val MAX_LAYOUT_ENTRIES = DashboardModule.entries.size
 
     private val ID_PATTERN = Regex("^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$")
     private val VERSION_PATTERN = Regex("^\\d+(\\.\\d+){0,2}$")
