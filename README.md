@@ -33,6 +33,7 @@ A local-first Android system monitor inspired by [btop](https://github.com/arist
 - **Device** — manufacturer/model, Android version, hardware, ABI, uptime and online core count.
 - **Optional Shizuku** — user-granted ADB-shell access to system CPU stats and the full process list, with automatic fallback.
 - **UI** — Material 3, light/dark theme, English, Simplified Chinese and Traditional Chinese (Hong Kong/Taiwan).
+- **Theme packs** — built-in Teal, AMOLED and Nord palettes; create a theme from a colour, import/export `.ptheme`/`.json` files, and apply an optional dashboard layout. Packs are data-only. See [theme pack format](docs/theme-packs.md).
 - **Privacy** — all data stays on the device; the app declares no `INTERNET` permission.
 
 ## Requirements
@@ -65,6 +66,12 @@ Shizuku is not bundled with power-tv and is only used after you grant access.
 
 When connected, the app reads `/proc/stat` and process data through a user service running under the ADB shell UID. Without Shizuku, the UI explains why system CPU load or other processes are unavailable instead of showing guessed values.
 
+## Theme packs
+
+The theme list lives under Settings → Theme packs. A pack is a declarative `theme.json` (optionally zipped with `assets/` images) that sets Material colour roles, chart accents, fonts, card radius, a backdrop and an optional dashboard layout. Packs never contain code and are imported through the system file picker, so the app still needs no storage or network permission.
+
+Built-in packs can be exported and used as a starting point. The full format, schema and examples are in [docs/theme-packs.md](docs/theme-packs.md).
+
 ## Data sources and limits
 
 | Metric | Source | Notes |
@@ -85,8 +92,10 @@ app/src/main/java/com/zitzhen/powertv/
 ├── data/
 │   ├── model/                   # Immutable telemetry models
 │   ├── proc/                    # /proc CPU, memory and process sampling/parsing
+│   ├── settings/                # Dashboard module order/visibility
 │   ├── shizuku/                 # AIDL reader service and Shizuku lifecycle
-│   └── system/                  # Battery, thermal, GPU, device info and aggregation
+│   ├── system/                  # Battery, thermal, GPU, device info and aggregation
+│   └── theme/                   # Theme pack model, JSON codec, archive import, repository
 └── ui/
     ├── MonitorViewModel.kt      # One-second sampling loop exposed as StateFlow
     ├── DashboardBinder.kt       # Dashboard cards and sparklines
@@ -94,6 +103,7 @@ app/src/main/java/com/zitzhen/powertv/
     ├── ProcessBinder.kt         # Process screen state and sorting
     ├── Formatters.kt            # Unit and value formatting
     ├── LoadPalette.kt           # Load-level colors
+    ├── theme/                   # Theme applier, manager, editor and preview
     └── widget/SparklineView.kt  # Custom scrolling sparkline
 ```
 

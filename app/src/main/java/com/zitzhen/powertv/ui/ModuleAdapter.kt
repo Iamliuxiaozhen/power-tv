@@ -5,11 +5,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.zitzhen.powertv.data.settings.DashboardModule
+import com.zitzhen.powertv.data.theme.ResolvedTheme
 import com.zitzhen.powertv.databinding.ItemModuleBinding
+import com.zitzhen.powertv.ui.theme.ThemeApplier
 
 class ModuleAdapter(
     private val items: List<DashboardModule>,
     private val visible: MutableSet<DashboardModule>,
+    private val theme: ResolvedTheme,
     private val onVisibilityChanged: (DashboardModule, Boolean) -> Unit,
 ) : RecyclerView.Adapter<ModuleAdapter.ViewHolder>() {
 
@@ -18,10 +21,14 @@ class ModuleAdapter(
     inner class ViewHolder(val binding: ItemModuleBinding) :
         RecyclerView.ViewHolder(binding.root)
 
+    private var styler: ThemeApplier.Styler? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = ItemModuleBinding.inflate(
             LayoutInflater.from(parent.context), parent, false,
         )
+        val viewStyler = styler ?: ThemeApplier.styler(parent.context, theme).also { styler = it }
+        viewStyler.apply(binding.root)
         return ViewHolder(binding)
     }
 

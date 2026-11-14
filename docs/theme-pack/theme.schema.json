@@ -1,0 +1,166 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "power-tv theme pack",
+  "type": "object",
+  "required": ["schemaVersion", "id", "name", "schemes"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": 1 },
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,63}$" },
+    "name": {
+      "oneOf": [
+        { "type": "string", "minLength": 1, "maxLength": 64 },
+        {
+          "type": "object",
+          "minProperties": 1,
+          "maxProperties": 8,
+          "additionalProperties": { "type": "string", "minLength": 1, "maxLength": 64 }
+        }
+      ]
+    },
+    "description": {
+      "oneOf": [
+        { "type": "string", "maxLength": 512 },
+        {
+          "type": "object",
+          "maxProperties": 8,
+          "additionalProperties": { "type": "string", "maxLength": 512 }
+        }
+      ]
+    },
+    "author": { "type": "string", "maxLength": 64 },
+    "version": { "type": "string", "pattern": "^\\d+(\\.\\d+){0,2}$" },
+    "minAppVersion": { "type": "string", "pattern": "^\\d+(\\.\\d+){0,2}$" },
+    "seed": { "$ref": "#/$defs/color" },
+    "schemes": {
+      "type": "object",
+      "required": ["light"],
+      "properties": {
+        "light": { "$ref": "#/$defs/colors" },
+        "dark": { "$ref": "#/$defs/colors" }
+      },
+      "additionalProperties": false
+    },
+    "dataViz": {
+      "type": "object",
+      "properties": {
+        "light": { "$ref": "#/$defs/dataViz" },
+        "dark": { "$ref": "#/$defs/dataViz" }
+      },
+      "additionalProperties": false
+    },
+    "typography": {
+      "type": "object",
+      "properties": {
+        "metricFont": { "$ref": "#/$defs/font" },
+        "monoFont": { "$ref": "#/$defs/font" }
+      },
+      "additionalProperties": false
+    },
+    "shape": {
+      "type": "object",
+      "properties": {
+        "cardRadiusDp": { "type": "number", "minimum": 0, "maximum": 32 }
+      },
+      "additionalProperties": false
+    },
+    "backdrop": {
+      "type": "object",
+      "required": ["image"],
+      "properties": {
+        "image": { "type": "string", "pattern": "^assets/[^/]+\\.(png|jpg|jpeg|webp)$" },
+        "dim": { "type": "number", "minimum": 0, "maximum": 0.8 }
+      },
+      "additionalProperties": false
+    },
+    "layout": {
+      "type": "object",
+      "required": ["order"],
+      "properties": {
+        "order": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/module" }
+        },
+        "visible": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/module" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "color": {
+      "type": "string",
+      "pattern": "^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+    },
+    "colors": {
+      "type": "object",
+      "properties": {
+        "primary": { "$ref": "#/$defs/color" },
+        "onPrimary": { "$ref": "#/$defs/color" },
+        "primaryContainer": { "$ref": "#/$defs/color" },
+        "onPrimaryContainer": { "$ref": "#/$defs/color" },
+        "secondary": { "$ref": "#/$defs/color" },
+        "onSecondary": { "$ref": "#/$defs/color" },
+        "secondaryContainer": { "$ref": "#/$defs/color" },
+        "onSecondaryContainer": { "$ref": "#/$defs/color" },
+        "tertiary": { "$ref": "#/$defs/color" },
+        "onTertiary": { "$ref": "#/$defs/color" },
+        "tertiaryContainer": { "$ref": "#/$defs/color" },
+        "onTertiaryContainer": { "$ref": "#/$defs/color" },
+        "error": { "$ref": "#/$defs/color" },
+        "onError": { "$ref": "#/$defs/color" },
+        "errorContainer": { "$ref": "#/$defs/color" },
+        "onErrorContainer": { "$ref": "#/$defs/color" },
+        "background": { "$ref": "#/$defs/color" },
+        "onBackground": { "$ref": "#/$defs/color" },
+        "surface": { "$ref": "#/$defs/color" },
+        "onSurface": { "$ref": "#/$defs/color" },
+        "surfaceVariant": { "$ref": "#/$defs/color" },
+        "onSurfaceVariant": { "$ref": "#/$defs/color" },
+        "outline": { "$ref": "#/$defs/color" },
+        "outlineVariant": { "$ref": "#/$defs/color" },
+        "surfaceContainerLowest": { "$ref": "#/$defs/color" },
+        "surfaceContainerLow": { "$ref": "#/$defs/color" },
+        "surfaceContainer": { "$ref": "#/$defs/color" },
+        "surfaceContainerHigh": { "$ref": "#/$defs/color" },
+        "surfaceContainerHighest": { "$ref": "#/$defs/color" }
+      },
+      "additionalProperties": false
+    },
+    "dataViz": {
+      "type": "object",
+      "properties": {
+        "loadLow": { "$ref": "#/$defs/color" },
+        "loadMedium": { "$ref": "#/$defs/color" },
+        "loadHigh": { "$ref": "#/$defs/color" },
+        "chartGrid": { "$ref": "#/$defs/color" },
+        "chartFill": { "$ref": "#/$defs/color" },
+        "liveDot": { "$ref": "#/$defs/color" }
+      },
+      "additionalProperties": false
+    },
+    "font": {
+      "enum": [
+        "sans-serif",
+        "sans-serif-medium",
+        "sans-serif-light",
+        "sans-serif-thin",
+        "sans-serif-condensed",
+        "serif",
+        "monospace"
+      ]
+    },
+    "module": {
+      "enum": ["hero", "cpu", "gpu", "thermal", "memory", "battery", "device"]
+    }
+  }
+}

@@ -16,12 +16,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.zitzhen.powertv.data.shizuku.ReaderMode
 import com.zitzhen.powertv.data.shizuku.ShizukuState
 import com.zitzhen.powertv.data.shizuku.ShizukuStatus
+import com.zitzhen.powertv.data.theme.ResolvedTheme
 import com.zitzhen.powertv.databinding.ActivityMainBinding
 import com.zitzhen.powertv.ui.DashboardBinder
 import com.zitzhen.powertv.ui.MonitorUiState
 import com.zitzhen.powertv.ui.MonitorViewModel
 import com.zitzhen.powertv.ui.ProcessBinder
 import com.zitzhen.powertv.ui.SettingsActivity
+import com.zitzhen.powertv.ui.theme.ThemeApplier
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +33,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var processBinder: ProcessBinder
     private val viewModel: MonitorViewModel by viewModels()
     private var currentShizukuState: ShizukuState? = null
+    private lateinit var theme: ResolvedTheme
+    private var appliedThemeRevision = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,8 +42,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dashboardBinder = DashboardBinder(binding.dashboard)
-        processBinder = ProcessBinder(binding.processes)
+        val themes = (application as PowerTvApp).themes
+        theme = themes.activeTheme()
+        appliedThemeRevision = themes.revision
+        ThemeApplier.apply(this, theme)
+
+        dashboardBinder = DashboardBinder(binding.dashboard, theme)
+        processBinder = ProcessBinder(binding.processes, theme)
         dashboardBinder.bind(MonitorUiState())
         showDashboard(true)
 
@@ -117,8 +126,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        val settings = (application as PowerTvApp).moduleSettings
-        dashboardBinder.applyModuleLayout(settings.loadOrder(), settings.loadVisible())
+        val app = application as PowerTvApp
+        if (app.themes.revision != appliedThemeRevision) {
+            recreate()
+            return
+        }
+        dashboardBinder.applyModuleLayout(
+            app.moduleSettings.loadOrder(),
+            app.moduleSettings.loadVisible(),
+        )
     }
 
     override fun onStop() {
@@ -203,10 +219,12 @@ class MainActivity : AppCompatActivity() {
                 append(getString(R.string.about_version, version))
             }
         }
-        MaterialAlertDialogBuilder(this)
+        val dialog = MaterialAlertDialogBuilder(this)
             .setTitle(R.string.about_title)
             .setMessage(message)
             .setPositiveButton(R.string.about_ok, null)
-            .show()
+            .create()
+        dialog.setOnShowListener { ThemeApplier.applyDialog(dialog, theme) }
+        dialog.show()
     }
 }

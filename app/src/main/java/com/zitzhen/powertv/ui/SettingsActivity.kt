@@ -1,5 +1,6 @@
 package com.zitzhen.powertv.ui
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -9,16 +10,22 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.zitzhen.powertv.PowerTvApp
 import com.zitzhen.powertv.R
 import com.zitzhen.powertv.data.settings.DashboardModule
 import com.zitzhen.powertv.data.settings.ModuleSettingsRepository
+import com.zitzhen.powertv.data.theme.ResolvedTheme
 import com.zitzhen.powertv.databinding.ActivitySettingsBinding
+import com.zitzhen.powertv.ui.theme.ThemeActivity
+import com.zitzhen.powertv.ui.theme.ThemeApplier
 
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
     private lateinit var repository: ModuleSettingsRepository
     private lateinit var adapter: ModuleAdapter
+    private lateinit var theme: ResolvedTheme
+    private var appliedThemeRevision = 0
 
     private val order = mutableListOf<DashboardModule>()
     private val visible = mutableSetOf<DashboardModule>()
@@ -28,6 +35,10 @@ class SettingsActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val app = application as PowerTvApp
+        theme = app.themes.activeTheme()
+        appliedThemeRevision = app.themes.revision
 
         repository = ModuleSettingsRepository(this)
         order.addAll(repository.loadOrder())
@@ -39,10 +50,17 @@ class SettingsActivity : AppCompatActivity() {
             setDisplayShowHomeEnabled(true)
         }
         binding.toolbar.setNavigationOnClickListener { finish() }
+        ThemeApplier.apply(this, theme)
+
+        binding.themeSummary.text = getString(R.string.settings_theme_summary, theme.pack.name())
+        binding.themeCard.setOnClickListener {
+            startActivity(Intent(this, ThemeActivity::class.java))
+        }
 
         adapter = ModuleAdapter(
             items = order,
             visible = visible,
+            theme = theme,
             onVisibilityChanged = { module, isVisible ->
                 if (isVisible) visible.add(module) else visible.remove(module)
                 persist()
@@ -81,7 +99,7 @@ class SettingsActivity : AppCompatActivity() {
         adapter.touchHelper = touchHelper
 
         binding.resetButton.setOnClickListener {
-            MaterialAlertDialogBuilder(this)
+            val dialog = MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.settings_reset_title)
                 .setMessage(R.string.settings_reset_message)
                 .setPositiveButton(R.string.settings_reset_confirm) { _, _ ->
@@ -93,7 +111,9 @@ class SettingsActivity : AppCompatActivity() {
                     adapter.notifyDataSetChanged()
                 }
                 .setNegativeButton(R.string.about_ok, null)
-                .show()
+                .create()
+            dialog.setOnShowListener { ThemeApplier.applyDialog(dialog, theme) }
+            dialog.show()
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
@@ -102,6 +122,13 @@ class SettingsActivity : AppCompatActivity() {
             )
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom)
             insets
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if ((application as PowerTvApp).themes.revision != appliedThemeRevision) {
+            recreate()
         }
     }
 

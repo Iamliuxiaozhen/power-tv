@@ -5,14 +5,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.zitzhen.powertv.R
 import com.zitzhen.powertv.data.model.ProcessInfo
 import com.zitzhen.powertv.data.model.ProcessSnapshot
+import com.zitzhen.powertv.data.theme.ResolvedTheme
 import com.zitzhen.powertv.databinding.ScreenProcessesBinding
 
 enum class ProcessSort { MEMORY, CPU }
 
 /** Binds process snapshots to the RecyclerView and sort controls. */
-class ProcessBinder(private val binding: ScreenProcessesBinding) {
+class ProcessBinder(
+    private val binding: ScreenProcessesBinding,
+    theme: ResolvedTheme,
+) {
 
-    private val adapter = ProcessAdapter()
+    private val adapter = ProcessAdapter(theme)
     private var sort = ProcessSort.MEMORY
     private var snapshot: ProcessSnapshot? = null
 

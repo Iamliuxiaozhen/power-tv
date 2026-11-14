@@ -1,0 +1,37 @@
+{
+  "$schema": "theme.schema.json",
+  "schemaVersion": 1,
+  "id": "user.my-theme",
+  "name": {
+    "en": "My theme",
+    "zh-CN": "我的主题"
+  },
+  "author": "your name",
+  "version": "1.0.0",
+  "seed": "#006A67",
+  "schemes": {
+    "light": {
+      "primary": "#006A67",
+      "surface": "#F5FAF9"
+    },
+    "dark": {
+      "primary": "#82D5D1",
+      "surface": "#0E1514"
+    }
+  },
+  "dataViz": {
+    "light": {
+      "loadLow": "#1F7A66",
+      "loadMedium": "#B26A00",
+      "loadHigh": "#BA1A1A"
+    },
+    "dark": {
+      "loadLow": "#7BD8C6",
+      "loadMedium": "#FFC857",
+      "loadHigh": "#FF8A80"
+    }
+  },
+  "shape": {
+    "cardRadiusDp": 24
+  }
+}
